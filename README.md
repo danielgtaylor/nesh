@@ -7,6 +7,8 @@ An enhanced extensible interactive interpreter (REPL) for Node.js and languages 
  * Asyncronous plugin architecture
  * Multi-language support (e.g. CoffeeScript)
 
+[![Dependency Status](https://gemnasium.com/danielgtaylor/nesh.png)](https://gemnasium.com/danielgtaylor/nesh) [![Build Status](https://travis-ci.org/danielgtaylor/nesh.png?branch=master)](https://travis-ci.org/danielgtaylor/nesh)
+
 Installation
 ------------
 You can install and start using `nesh` with `npm` (note: you may need to use `sudo` to install globally):
