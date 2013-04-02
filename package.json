@@ -1,0 +1,51 @@
+{
+  "name": "nesh",
+  "version": "0.1.0",
+  "description": "An enhanced, extensible shell for Node.js",
+  "homepage": "https://github.com/danielgtaylor/nesh",
+  "main": "lib/nesh.js",
+  "bin": {
+    "nesh": "./bin/nesh.coffee"
+  },
+  "scripts": {
+    "pretest": "cake build",
+    "prepublish": "cake build",
+    "test": "cake test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/danielgtaylor/nesh"
+  },
+  "bugs": {
+    "url": "https://github.com/danielgtaylor/nesh/issues"
+  },
+  "keywords": [
+    "script",
+    "interactive",
+    "shell",
+    "interpreter",
+    "extend",
+    "enhance",
+    "enhanced",
+    "embed",
+    "embedding",
+    "coffee"
+  ],
+  "author": {
+    "name": "Daniel G. Taylor",
+    "email": "danielgtaylor@gmail.com",
+    "url": "http://programmer-art.org/"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "colors": ">=0.6 <1",
+    "optimist": ">=0.3.5 <1"
+  },
+  "devDependencies": {
+    "coffee-script": ">=1.6.2 <2",
+    "mocha": "1.x"
+  },
+  "engines": {
+    "node": ">=0.6"
+  }
+}
