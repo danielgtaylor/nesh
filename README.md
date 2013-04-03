@@ -3,6 +3,7 @@ Nesh - Node Enhanced/Extensible/Embeddable Shell
 An enhanced extensible interactive interpreter (REPL) for Node.js and languages that compile to Javascript, like CoffeeScript. Some features:
 
  * Lightweight & fast
+ * Built-in convenience functions
  * Easily extensible interactive environment
  * Asyncronous plugin architecture
  * Multi-language support (e.g. CoffeeScript)
@@ -52,6 +53,32 @@ As a shortcut for CoffeeScript, you can also use `nesh -c`.
 
 ### Setting a Prompt & Welcome Message
 A prompt can be set with the `--prompt` parameter, e.g. `nesh --prompt "test> "`. The welcome message can be set the same way with the `--welcome` parameter. You can disable the welcome message via e.g. `nesh --no-welcome`.
+
+Convenience Functions
+---------------------
+When run from the `nesh` command several built-in convenience functions are available.
+
+### Hashing
+
+#### md5 (value)
+Return an MD5 hash of a value as a hexadecimal string.
+
+#### sha (value)
+Return a SHA1 hash of a value as a hexadecimal string.
+
+### Random
+
+#### rand ([start], [end])
+Generate a random number. If neither `start` nor `end` are given, it returns a number between 0 and 1. If only `start` is given, a number between 0 and `start` is returned. Otherwise, a number between `start` and `end` is returned.
+
+#### randChoices (choices, [length])
+Select an array of random choices of length `length` from an array `choices`.
+
+#### randString (length, [charSet])
+Return a random string with characters selected from `charSet`, which defaults to case-sensitive alphanumeric characters.
+
+#### randHex (length)
+Return a random lowercase hexadecimal string.
 
 Embedding the Interpreter
 -------------------------
@@ -139,6 +166,7 @@ myPlugin =
 ### Default Plugins
 Nesh ships with several default plugins:
 
+ * `builtins` Adds built-in convenience functions to the global context
  * `version` Adds a `.versions` command to show Node, Nesh, and language versions
  * `welcome` Adds a welcome message to the interactive interpreter
 
