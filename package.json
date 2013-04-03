@@ -5,7 +5,7 @@
   "homepage": "https://github.com/danielgtaylor/nesh",
   "main": "lib/nesh.js",
   "bin": {
-    "nesh": "./bin/nesh.coffee"
+    "nesh": "./bin/nesh.js"
   },
   "scripts": {
     "pretest": "cake build",

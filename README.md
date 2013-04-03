@@ -174,7 +174,7 @@ cake build
 You can run the `nesh` command from your local checkout:
 
 ```bash
-./bin/nesh.coffee
+./bin/nesh.js
 ```
 
 It is also possible to use `npm` to link your local checkout globally (note: this may require `sudo`):

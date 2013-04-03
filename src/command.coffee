@@ -1,6 +1,8 @@
-#!/usr/bin/env coffee
-
-nesh = require '../lib/nesh'
+###
+The nesh command, which parses options and then drops the user
+into an interactive session.
+###
+nesh = require './nesh'
 
 optimist = require('optimist')
     .usage('$0 [options]')
@@ -49,5 +51,8 @@ opts = {}
 opts.prompt = argv.prompt if argv.prompt?
 opts.welcome = argv.welcome if argv.welcome?
 
-nesh.start opts, (err) ->
-    console.error err if err
+nesh.loadPlugin require('./plugins/builtins'), (err) ->
+    return console.log err if err
+    
+    nesh.start opts, (err) ->
+        console.error err if err
