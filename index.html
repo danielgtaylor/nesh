@@ -1,0 +1,281 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Nesh by danielgtaylor</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <script src="javascripts/scale.fix.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1 class="header">Nesh</h1>
+        <p class="header">An enhanced, extensible, embeddable interactive shell for Node.js</p>
+
+        <ul>
+          <li class="download"><a class="buttons" href="https://github.com/danielgtaylor/nesh/zipball/master">Download ZIP</a></li>
+          <li class="download"><a class="buttons" href="https://github.com/danielgtaylor/nesh/tarball/master">Download TAR</a></li>
+          <li><a class="buttons github" href="https://github.com/danielgtaylor/nesh">View On GitHub</a></li>
+        </ul>
+
+        <p class="header">This project is maintained by <a class="header name" href="https://github.com/danielgtaylor">danielgtaylor</a></p>
+
+
+      </header>
+      <section>
+        <h1>Node Enhanced Shell</h1>
+
+<p>An enhanced extensible interactive interpreter (REPL) for Node.js and languages that compile to Javascript, like CoffeeScript. Some features:</p>
+
+<ul>
+<li>Lightweight &amp; fast</li>
+<li>Built-in convenience functions</li>
+<li>Easily extensible interactive environment</li>
+<li>Asyncronous plugin architecture</li>
+<li>Multi-language support (e.g. CoffeeScript)</li>
+</ul><p><a href="https://gemnasium.com/danielgtaylor/nesh"><img src="https://gemnasium.com/danielgtaylor/nesh.png" alt="Dependency Status"></a> <a href="https://travis-ci.org/danielgtaylor/nesh"><img src="https://travis-ci.org/danielgtaylor/nesh.png?branch=master" alt="Build Status"></a></p>
+
+<h2>Installation</h2>
+
+<p>You can install and start using <code>nesh</code> with <code>npm</code> (note: you may need to use <code>sudo</code> to install globally):</p>
+
+<div class="highlight"><pre>npm install -g nesh
+
+<span class="c"># Run nesh</span>
+nesh
+
+<span class="c"># Run nesh with CoffeeScript</span>
+npm install -g coffee-script
+nesh -c
+</pre></div>
+
+<p>If you wish to use <code>nesh</code> within your own project with <code>require 'nesh'</code> (i.e. to embed within your app) you can use the following non-global install instead:</p>
+
+<div class="highlight"><pre>npm install nesh
+</pre></div>
+
+<h2>Basic Usage</h2>
+
+<p>The <code>nesh</code> command starts an interactive interpreter with a default set of plugins loaded. You can type commands and they will be executed, with the output or any errors displayed below the command.</p>
+
+<h3>Command Help</h3>
+
+<p>You can get a list of options and help via:</p>
+
+<div class="highlight"><pre>nesh --help
+</pre></div>
+
+<h3>Setting a Language</h3>
+
+<p>Nesh supports multiple languages, and ships with CoffeeScript support out of the box. To select a language:</p>
+
+<div class="highlight"><pre>nesh -l coffee
+</pre></div>
+
+<p>As a shortcut for CoffeeScript, you can also use <code>nesh -c</code>.</p>
+
+<h3>Setting a Prompt &amp; Welcome Message</h3>
+
+<p>A prompt can be set with the <code>--prompt</code> parameter, e.g. <code>nesh --prompt "test&gt; "</code>. The welcome message can be set the same way with the <code>--welcome</code> parameter. You can disable the welcome message via e.g. <code>nesh --no-welcome</code>.</p>
+
+<h2>Convenience Functions</h2>
+
+<p>When run from the <code>nesh</code> command several built-in convenience functions are available.</p>
+
+<h3>Hashing</h3>
+
+<h4>md5 (value)</h4>
+
+<p>Return an MD5 hash of a value as a hexadecimal string.</p>
+
+<h4>sha (value)</h4>
+
+<p>Return a SHA1 hash of a value as a hexadecimal string.</p>
+
+<h3>Random</h3>
+
+<h4>rand ([start], [end])</h4>
+
+<p>Generate a random number. If neither <code>start</code> nor <code>end</code> are given, it returns a number between 0 and 1. If only <code>start</code> is given, a number between 0 and <code>start</code> is returned. Otherwise, a number between <code>start</code> and <code>end</code> is returned.</p>
+
+<h4>randChoices (choices, [length])</h4>
+
+<p>Select an array of random choices of length <code>length</code> from an array <code>choices</code>.</p>
+
+<h4>randString (length, [charSet])</h4>
+
+<p>Return a random string with characters selected from <code>charSet</code>, which defaults to case-sensitive alphanumeric characters.</p>
+
+<h4>randHex (length)</h4>
+
+<p>Return a random lowercase hexadecimal string.</p>
+
+<h2>Embedding the Interpreter</h2>
+
+<p>The Nesh interpreter can be embedded into your application, whether it is written in Javascript, Coffeescript, or another language that runs on Node. For example, to start an interactive CoffeeScript session on stdin/stdout from Javascript with a custom prompt and welcome message:</p>
+
+<div class="highlight"><pre><span class="nx">nesh</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'nesh'</span><span class="p">);</span>
+
+<span class="nx">opts</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="nx">welcome</span><span class="o">:</span> <span class="s1">'Welcome!'</span><span class="p">,</span>
+    <span class="nx">prompt</span><span class="o">:</span> <span class="s1">'test&gt; '</span><span class="p">,</span>
+    <span class="nx">inputStream</span><span class="o">:</span> <span class="nx">process</span><span class="p">.</span><span class="nx">stdin</span><span class="p">,</span>
+    <span class="nx">outputStream</span><span class="o">:</span> <span class="nx">process</span><span class="p">.</span><span class="nx">stdout</span>
+<span class="p">};</span>
+
+<span class="nx">nesh</span><span class="p">.</span><span class="nx">loadLanguage</span><span class="p">(</span><span class="s1">'coffee'</span><span class="p">);</span>
+
+<span class="nx">nesh</span><span class="p">.</span><span class="nx">start</span><span class="p">(</span><span class="nx">opts</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">err</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">});</span>
+</pre></div>
+
+<h2>Extending the Interpreter</h2>
+
+<p>The Nesh interpreter can be easily extended with new languages and plugins.</p>
+
+<p>Languages can be added using the <code>nesh.loadLanguage</code> function. New languages should override <code>nesh.repl</code> to provide a Node REPL-like interface with a <code>start</code> function. For example:</p>
+
+<div class="highlight"><pre><span class="nv">nesh = </span><span class="nx">require</span> <span class="s">'nesh'</span>
+
+<span class="nx">nesh</span><span class="p">.</span><span class="nx">loadLanguage</span> <span class="nf">(neshRef) -&gt;</span>
+    <span class="nv">neshRef.repl =</span>
+        <span class="nv">start: </span><span class="nf">(opts, next) -&gt;</span>
+            <span class="c1"># Do stuff here!</span>
+    <span class="nv">neshRef.defaults.welcome = </span><span class="s">'Welcome to my interpreter!'</span>
+
+<span class="nx">nesh</span><span class="p">.</span><span class="nx">start</span> <span class="nf">(err) -&gt;</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="nx">err</span> <span class="k">if</span> <span class="nx">err</span>
+</pre></div>
+
+<p>Plugins may define <code>setup</code>, <code>preStart</code>, and <code>postStart</code> functions that are called when the plugin is loaded, before a REPL is created, and after a REPL has been created respectively. Plugins are loaded via the <code>nesh.loadPlugin</code> function. A very simple example plugin written in CoffeeScript might look like this:</p>
+
+<div class="highlight"><pre><span class="nv">nesh = </span><span class="nx">require</span> <span class="s">'nesh'</span>
+<span class="nv">util = </span><span class="nx">require</span> <span class="s">'util'</span>
+
+<span class="nv">myPlugin =</span>
+    <span class="nv">setup: </span><span class="nf">(defaults) -&gt;</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="s">'Setting up my plugin! Defaults:'</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="nx">util</span><span class="p">.</span><span class="nx">inspect</span> <span class="nx">defaults</span>
+
+    <span class="nv">preStart: </span><span class="nf">(opts) -&gt;</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="s">'About to start the interpreter with these options:'</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="nx">util</span><span class="p">.</span><span class="nx">inspect</span> <span class="nx">opts</span>
+
+    <span class="nv">postStart: </span><span class="nf">(repl) -&gt;</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="s">'Interpreter started! REPL:'</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="nx">util</span><span class="p">.</span><span class="nx">inspect</span> <span class="nx">repl</span>
+
+<span class="nx">nesh</span><span class="p">.</span><span class="nx">loadPlugin</span> <span class="nx">myPlugin</span><span class="p">,</span> <span class="nf">(err) -&gt;</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="nx">err</span> <span class="k">if</span> <span class="nx">err</span>
+
+    <span class="nx">nesh</span><span class="p">.</span><span class="nx">start</span> <span class="nf">(err) -&gt;</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="nx">err</span> <span class="k">if</span> <span class="nx">err</span>
+</pre></div>
+
+<p>Several plugins ship with Nesh, just take a look at the <code>src/plugins</code> directory. If these ever need to be removed then you can do so by accessing the <code>nesh.plugins</code> array.</p>
+
+<h3>Asyncronous Plugins</h3>
+
+<p>Sometimes, a plugin may take actions that must run asyncronously. To support these cases, each of the plugin's functions can take a callback parameter <code>next</code> which must be called when finished. For example, if we were loading the welcome message's default value from a database with an asyncronous call:</p>
+
+<div class="highlight"><pre><span class="nv">myPlugin =</span>
+    <span class="nv">setup: </span><span class="nf">(defaults, next) -&gt;</span>
+        <span class="nx">mongodb</span><span class="p">.</span><span class="nx">findOne</span> <span class="nv">name: </span><span class="s">'defaultWelcome'</span><span class="p">,</span> <span class="nf">(err, item) -&gt;</span>
+            <span class="k">return</span> <span class="nx">next</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="k">if</span> <span class="nx">err</span>
+
+            <span class="nv">defaults.welcome = </span><span class="nx">item</span><span class="p">.</span><span class="nx">message</span>
+            <span class="nx">next</span><span class="p">()</span>
+</pre></div>
+
+<h3>Default Plugins</h3>
+
+<p>Nesh ships with several default plugins:</p>
+
+<ul>
+<li>
+<code>builtins</code> Adds built-in convenience functions to the global context</li>
+<li>
+<code>version</code> Adds a <code>.versions</code> command to show Node, Nesh, and language versions</li>
+<li>
+<code>welcome</code> Adds a welcome message to the interactive interpreter</li>
+</ul><h3>Plugin Reference</h3>
+
+<h4>Plugin.setup (defaults, [next])</h4>
+
+<p>Called when the plugin is first loaded. The <code>defaults</code> passed in are an object containing default values that will be used to initialize the interpreter when <code>nesh.start</code> is called. If <code>next</code> is defined, then the function is treated as asyncronous and <code>next</code> will be passed a function that must be called when finished. If an error occurs, then the error should be passed to <code>next</code>.</p>
+
+<p>This is a good place to add or modify default values.</p>
+
+<h4>Plugin.preStart (opts, [next])</h4>
+
+<p>Called when <code>nesh.start</code> has been called but before the REPL is created and started. The <code>opts</code> passed in are a merged object made from the Nesh defaults and any options passed to <code>nesh.start</code>. If <code>next</code> is defined, then the function is treated as asyncronous and <code>next</code> will be passed a function that must be called when finished. If an error occurs, then the error should be passed to <code>next</code>.</p>
+
+<p>This is a good place to print out information or modify the passed in options before they are sent to the REPL.</p>
+
+<h4>Plugin.postStart (repl, [next])</h4>
+
+<p>Called when <code>nesh.start</code> has been called and the REPL is started. The <code>repl</code> passed in is the newly created and started REPL from the <code>nesh.start</code> call. If <code>next</code> is defined, then the function is treated as asyncronous and <code>next</code> will be passed a function that must be called when finished. If an error occurs, then the error should be passed to <code>next</code>.</p>
+
+<p>This is a good place to modify the REPL, e.g. adding new commands, modifying history, listening for specific key strokes, etc.</p>
+
+<h2>Development</h2>
+
+<p>Nesh development is easy! Just grab the source with git and start hacking around. Contributions, especially interesting languages and plugins, are always welcome!</p>
+
+<h3>Building</h3>
+
+<p>After making changes it is important to run a build step to generate the Javascript which gets loaded when you import the <code>nesh</code> module, which makes it work across all Node languages.</p>
+
+<div class="highlight"><pre>cake build
+</pre></div>
+
+<h3>Running a local <code>nesh</code>
+</h3>
+
+<p>You can run the <code>nesh</code> command from your local checkout:</p>
+
+<div class="highlight"><pre>./bin/nesh.js
+</pre></div>
+
+<p>It is also possible to use <code>npm</code> to link your local checkout globally (note: this may require <code>sudo</code>):</p>
+
+<div class="highlight"><pre>npm link
+</pre></div>
+
+<p>Now you should be able to run <code>nesh</code> from anywhere and have it use your development version.</p>
+
+<h3>Unit Tests</h3>
+
+<p>The unit test suite can be run via the following:</p>
+
+<div class="highlight"><pre>cake <span class="nb">test</span>
+</pre></div>
+
+<h2>License</h2>
+
+<p>Copyright (c) 2013 Daniel G. Taylor</p>
+
+<p>Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:</p>
+
+<p>The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.</p>
+
+<p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</p>
+      </section>
+      <footer>
+        <p><small>Hosted on <a href="https://pages.github.com">GitHub Pages</a> using the Dinky theme</small></p>
+      </footer>
+    </div>
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+		
+  </body>
+</html>
