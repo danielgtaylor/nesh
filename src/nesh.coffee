@@ -68,7 +68,7 @@ nesh.plugins = []
 nesh.loadLanguage = (data) ->
     switch typeof data
         when 'function'
-            data(nesh)
+            data nesh
         when 'string'
             require("./languages/#{data}").setup nesh
         else
