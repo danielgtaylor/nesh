@@ -89,7 +89,7 @@ nesh.loadLanguage (neshRef) ->
     neshRef.repl =
         start: (opts, next) ->
             # Do stuff here!
-    neshRef.welcome = 'Welcome to my interpreter!'
+    neshRef.defaults.welcome = 'Welcome to my interpreter!'
 
 nesh.start (err) ->
     console.log err if err
@@ -117,8 +117,8 @@ myPlugin =
 nesh.loadPlugin myPlugin, (err) ->
     console.log err if err
 
-nesh.start (err) ->
-    console.log err if err
+    nesh.start (err) ->
+        console.log err if err
 ```
 
 Several plugins ship with Nesh, just take a look at the `src/plugins` directory. If these ever need to be removed then you can do so by accessing the `nesh.plugins` array.
