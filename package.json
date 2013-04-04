@@ -2,7 +2,7 @@
   "name": "nesh",
   "version": "0.3.0",
   "description": "An enhanced, extensible shell for Node.js",
-  "homepage": "https://github.com/danielgtaylor/nesh",
+  "homepage": "http://danielgtaylor.github.com/nesh/",
   "main": "lib/nesh.js",
   "bin": {
     "nesh": "./bin/nesh.js"
