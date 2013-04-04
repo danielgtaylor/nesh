@@ -27,6 +27,10 @@ describe 'languages', ->
     it 'should load a language via a function', (done) ->
         nesh = require '../lib/nesh'
         nesh.loadLanguage ->
+            nesh.compile = null
+            nesh.repl = require 'repl'
+            nesh.defaults.welcome = 'Welcome!'
+            nesh.defaults.prompt = 'nesh> '
             done()
 
 describe 'plugins', ->
@@ -52,4 +56,18 @@ describe 'plugins', ->
         nesh.loadPlugin plugin, (err) ->
             nesh.plugins.pop()
             assert.equal true, err?
+            done()
+
+describe 'eval', ->
+    it 'should eval in the REPL context', (done) ->
+        nesh = require '../lib/nesh'
+
+        opts =
+            evalData: 'var hello = function (name) { return "Hello, " + name; }'
+            outputStream:
+                write: (data) ->
+
+        nesh.start opts, (err, repl) ->
+            assert.ok repl.context.hello
+            assert.equal false, err?
             done()

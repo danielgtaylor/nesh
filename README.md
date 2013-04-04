@@ -46,13 +46,39 @@ nesh --help
 Nesh supports multiple languages, and ships with CoffeeScript support out of the box. To select a language:
 
 ```bash
-nesh -l coffee
+nesh --language coffee
 ```
 
-As a shortcut for CoffeeScript, you can also use `nesh -c`.
+You can get a list of supported built-in languages via:
+
+```bash
+nesh --list-languages
+```
+
+As a shortcut for CoffeeScript, you can also use `nesh -c`. It's also pretty easy to set up an alias for this, e.g. `alias cs='nesh -c'` in bash.
 
 ### Setting a Prompt & Welcome Message
 A prompt can be set with the `--prompt` parameter, e.g. `nesh --prompt "test> "`. The welcome message can be set the same way with the `--welcome` parameter. You can disable the welcome message via e.g. `nesh --no-welcome`.
+
+### Preloading Code
+You can preload a script with the `--eval` option, which will evaluate either a file or string in the context of the interpreter, so anything you define will be available in the interpreter after startup. This is similar to using `ipython -i script.py`.
+
+```bash
+echo 'var hello = function (name) { return "Hello, " + name; }' >hello.js
+nesh --eval hello.js
+```
+
+Now you can run `hello('world');` in the interpreter. A string can also be used:
+
+```bash
+nesh --eval "var test = 1;"
+```
+
+Languages other than Javascript can also be used. When using a non-Javascript language, the code loaded will use that language's compile function before running. For example:
+
+```bash
+nesh -c -e hello.coffee
+```
 
 Convenience Functions
 ---------------------
@@ -107,12 +133,14 @@ Extending the Interpreter
 -------------------------
 The Nesh interpreter can be easily extended with new languages and plugins.
 
-Languages can be added using the `nesh.loadLanguage` function. New languages should override `nesh.repl` to provide a Node REPL-like interface with a `start` function. For example:
+Languages can be added using the `nesh.loadLanguage` function. New languages should override `nesh.compile` and `nesh.repl` to provide a Node REPL-like interface with a `start` function. For example:
 
 ```coffeescript
 nesh = require 'nesh'
 
 nesh.loadLanguage (neshRef) ->
+    neshRef.compile = (data) ->
+        # Compile to js here
     neshRef.repl =
         start: (opts, next) ->
             # Do stuff here!
@@ -167,8 +195,9 @@ myPlugin =
 Nesh ships with several default plugins:
 
  * `builtins` Adds built-in convenience functions to the global context
+ * `eval` Evaluates javascript in `opts.evalData` in the context of the REPL
  * `version` Adds a `.versions` command to show Node, Nesh, and language versions
- * `welcome` Adds a welcome message to the interactive interpreter
+ * `welcome` Adds a welcome message to the interactive interpreter via `opts.welcome`
 
 ### Plugin Reference
 

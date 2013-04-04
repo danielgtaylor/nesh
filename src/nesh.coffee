@@ -4,6 +4,7 @@ Node Enhanced Interactive Interpreter
 Provides a simple to use, extensible, embeddable interpreter for
 your apps.
 ###
+fs = require 'fs'
 neshInfo = require '../package'
 
 ###
@@ -59,10 +60,16 @@ nesh.defaults =
     prompt: 'nesh> '
 
 # Languages
+nesh.compile = null
 nesh.repl = require 'repl'
 
 # A list of currently loaded plugins
 nesh.plugins = []
+
+# Get a list of built-in languages that can be loaded
+nesh.languages = ->
+    # List every js file without its extension in the languages directory
+    fs.readdirSync("#{__dirname}/languages").filter((item) -> item[-2..] is 'js').map (item) -> item.split('.')[..-2].join('.')
 
 # Load a new language by name or as a function
 nesh.loadLanguage = (data) ->
@@ -95,10 +102,14 @@ nesh.start = (opts = {}, callback) ->
 
         repl = nesh.repl.start opts
 
-        processPlugins 'postStart', repl, callback
+        # Expose the passed options in the repl object
+        repl.opts = opts
+
+        processPlugins 'postStart', repl, (err) ->
+            return callback? err if err
+            callback? err, repl
 
 # Load default plugins
-nesh.loadPlugin require('./plugins/welcome'), (err) ->
-    console.error 'Problem setting up welcome plugin: ', err if err
-nesh.loadPlugin require('./plugins/version'), (err) ->
-    console.error 'Problem setting up version plugin: ', err if err
+for plugin in ['eval', 'welcome', 'version']
+    nesh.loadPlugin require("./plugins/#{plugin}"), (err) ->
+        console.error "Problem loading #{plugin} plugin: ", err if err
