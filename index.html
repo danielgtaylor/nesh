@@ -30,7 +30,7 @@
 
       </header>
       <section>
-        <h1>Node Enhanced Shell</h1>
+        <h1>Node EnhancedShell</h1>
 
 <p>An enhanced extensible interactive interpreter (REPL) for Node.js and languages that compile to Javascript, like CoffeeScript. Some features:</p>
 
@@ -76,14 +76,37 @@ nesh -c
 
 <p>Nesh supports multiple languages, and ships with CoffeeScript support out of the box. To select a language:</p>
 
-<div class="highlight"><pre>nesh -l coffee
+<div class="highlight"><pre>nesh --language coffee
 </pre></div>
 
-<p>As a shortcut for CoffeeScript, you can also use <code>nesh -c</code>.</p>
+<p>You can get a list of supported built-in languages via:</p>
+
+<div class="highlight"><pre>nesh --list-languages
+</pre></div>
+
+<p>As a shortcut for CoffeeScript, you can also use <code>nesh -c</code>. It's also pretty easy to set up an alias for this, e.g. <code>alias cs='nesh -c'</code> in bash.</p>
 
 <h3>Setting a Prompt &amp; Welcome Message</h3>
 
 <p>A prompt can be set with the <code>--prompt</code> parameter, e.g. <code>nesh --prompt "test&gt; "</code>. The welcome message can be set the same way with the <code>--welcome</code> parameter. You can disable the welcome message via e.g. <code>nesh --no-welcome</code>.</p>
+
+<h3>Preloading Code</h3>
+
+<p>You can preload a script with the <code>--eval</code> option, which will evaluate either a file or string in the context of the interpreter, so anything you define will be available in the interpreter after startup. This is similar to using <code>ipython -i script.py</code>.</p>
+
+<div class="highlight"><pre><span class="nb">echo</span> <span class="s1">'var hello = function (name) { return "Hello, " + name; }'</span> &gt;hello.js
+nesh --eval hello.js
+</pre></div>
+
+<p>Now you can run <code>hello('world');</code> in the interpreter. A string can also be used:</p>
+
+<div class="highlight"><pre>nesh --eval <span class="s2">"var test = 1;"</span>
+</pre></div>
+
+<p>Languages other than Javascript can also be used. When using a non-Javascript language, the code loaded will use that language's compile function before running. For example:</p>
+
+<div class="highlight"><pre>nesh -c -e hello.coffee
+</pre></div>
 
 <h2>Convenience Functions</h2>
 
@@ -143,11 +166,13 @@ nesh -c
 
 <p>The Nesh interpreter can be easily extended with new languages and plugins.</p>
 
-<p>Languages can be added using the <code>nesh.loadLanguage</code> function. New languages should override <code>nesh.repl</code> to provide a Node REPL-like interface with a <code>start</code> function. For example:</p>
+<p>Languages can be added using the <code>nesh.loadLanguage</code> function. New languages should override <code>nesh.compile</code> and <code>nesh.repl</code> to provide a Node REPL-like interface with a <code>start</code> function. For example:</p>
 
 <div class="highlight"><pre><span class="nv">nesh = </span><span class="nx">require</span> <span class="s">'nesh'</span>
 
 <span class="nx">nesh</span><span class="p">.</span><span class="nx">loadLanguage</span> <span class="nf">(neshRef) -&gt;</span>
+    <span class="nv">neshRef.compile = </span><span class="nf">(data) -&gt;</span>
+        <span class="c1"># Compile to js here</span>
     <span class="nv">neshRef.repl =</span>
         <span class="nv">start: </span><span class="nf">(opts, next) -&gt;</span>
             <span class="c1"># Do stuff here!</span>
@@ -205,9 +230,12 @@ nesh -c
 <li>
 <code>builtins</code> Adds built-in convenience functions to the global context</li>
 <li>
+<code>eval</code> Evaluates javascript in <code>opts.evalData</code> in the context of the REPL</li>
+<li>
 <code>version</code> Adds a <code>.versions</code> command to show Node, Nesh, and language versions</li>
 <li>
-<code>welcome</code> Adds a welcome message to the interactive interpreter</li>
+<code>welcome</code> Adds a welcome message to the interactive interpreter via <code>opts.welcome</code>
+</li>
 </ul><h3>Plugin Reference</h3>
 
 <h4>Plugin.setup (defaults, [next])</h4>
