@@ -30,7 +30,7 @@
 
       </header>
       <section>
-        <h1>Node EnhancedShell</h1>
+        <h1>Node Enhanced Shell</h1>
 
 <p>An enhanced extensible interactive interpreter (REPL) for Node.js and languages that compile to Javascript, like CoffeeScript. Some features:</p>
 
@@ -162,7 +162,34 @@ nesh --eval hello.js
 <span class="p">});</span>
 </pre></div>
 
-<h2>Extending the Interpreter</h2>
+<h3>Embedding Reference</h3>
+
+<h4>nesh.defaults</h4>
+
+<p>An object containing default values that are set when no such value is passed to <code>nesh.start</code>'s <code>opts</code> parameter.</p>
+
+<h4>nesh.languages ()</h4>
+
+<p>Get a list of supported built-in languages that can be passed as strings to <code>nesh.loadLanguage</code>.</p>
+
+<h4>nesh.loadLanguage (name)</h4>
+
+<p>Load a language to be interpreted, e.g. <code>coffee</code> for CoffeeScript.</p>
+
+<h4>nesh.loadPlugin (plugin)</h4>
+
+<p>Loads a plugin - see below in the Extending the Interpreter section for details.</p>
+
+<h4>nesh.start ([opts], [callback])</h4>
+
+<p>Create a new nesh REPL with the passed options <code>opts</code>. Allowed options include the defaults from the Node REPL module (<a href="http://nodejs.org/api/repl.html">http://nodejs.org/api/repl.html</a>) as well as the following:</p>
+
+<ul>
+<li>
+<code>welcome</code> A welcome message to be displayed on startup</li>
+<li>
+<code>evalData</code> A javascript string to execute within the REPL context on startup</li>
+</ul><h2>Extending the Interpreter</h2>
 
 <p>The Nesh interpreter can be easily extended with new languages and plugins.</p>
 
@@ -252,7 +279,7 @@ nesh --eval hello.js
 
 <h4>Plugin.postStart (repl, [next])</h4>
 
-<p>Called when <code>nesh.start</code> has been called and the REPL is started. The <code>repl</code> passed in is the newly created and started REPL from the <code>nesh.start</code> call. If <code>next</code> is defined, then the function is treated as asyncronous and <code>next</code> will be passed a function that must be called when finished. If an error occurs, then the error should be passed to <code>next</code>.</p>
+<p>Called when <code>nesh.start</code> has been called and the REPL is started. The <code>repl</code> passed in is the newly created and started REPL from the <code>nesh.start</code> call and includes the <code>opts</code> from above as <code>repl.opts</code>. If <code>next</code> is defined, then the function is treated as asyncronous and <code>next</code> will be passed a function that must be called when finished. If an error occurs, then the error should be passed to <code>next</code>.</p>
 
 <p>This is a good place to modify the REPL, e.g. adding new commands, modifying history, listening for specific key strokes, etc.</p>
 
