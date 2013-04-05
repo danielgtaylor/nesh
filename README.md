@@ -1,5 +1,5 @@
-Nesh - Node Enhanced/Extensible/Embeddable Shell
-================================================
+Node Enhanced Shell
+===================
 An enhanced extensible interactive interpreter (REPL) for Node.js and languages that compile to Javascript, like CoffeeScript. Some features:
 
  * Lightweight & fast
@@ -129,6 +129,26 @@ nesh.start(opts, function (err) {
 });
 ```
 
+### Embedding Reference
+
+#### nesh.defaults
+An object containing default values that are set when no such value is passed to `nesh.start`'s `opts` parameter.
+
+#### nesh.languages ()
+Get a list of supported built-in languages that can be passed as strings to `nesh.loadLanguage`.
+
+#### nesh.loadLanguage (name)
+Load a language to be interpreted, e.g. `coffee` for CoffeeScript.
+
+#### nesh.loadPlugin (plugin)
+Loads a plugin - see below in the Extending the Interpreter section for details.
+
+#### nesh.start ([opts], [callback])
+Create a new nesh REPL with the passed options `opts`. Allowed options include the defaults from the Node REPL module (http://nodejs.org/api/repl.html) as well as the following:
+
+ * `welcome` A welcome message to be displayed on startup
+ * `evalData` A javascript string to execute within the REPL context on startup
+
 Extending the Interpreter
 -------------------------
 The Nesh interpreter can be easily extended with new languages and plugins.
@@ -212,7 +232,7 @@ Called when `nesh.start` has been called but before the REPL is created and star
 This is a good place to print out information or modify the passed in options before they are sent to the REPL.
 
 #### Plugin.postStart (repl, [next])
-Called when `nesh.start` has been called and the REPL is started. The `repl` passed in is the newly created and started REPL from the `nesh.start` call. If `next` is defined, then the function is treated as asyncronous and `next` will be passed a function that must be called when finished. If an error occurs, then the error should be passed to `next`.
+Called when `nesh.start` has been called and the REPL is started. The `repl` passed in is the newly created and started REPL from the `nesh.start` call and includes the `opts` from above as `repl.opts`. If `next` is defined, then the function is treated as asyncronous and `next` will be passed a function that must be called when finished. If an error occurs, then the error should be passed to `next`.
 
 This is a good place to modify the REPL, e.g. adding new commands, modifying history, listening for specific key strokes, etc.
 
