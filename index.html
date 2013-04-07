@@ -193,17 +193,23 @@ nesh --eval hello.js
 
 <p>The Nesh interpreter can be easily extended with new languages and plugins.</p>
 
-<p>Languages can be added using the <code>nesh.loadLanguage</code> function. New languages should override <code>nesh.compile</code> and <code>nesh.repl</code> to provide a Node REPL-like interface with a <code>start</code> function. For example:</p>
+<p>Languages can be added using the <code>nesh.loadLanguage</code> function. New languages should override <code>nesh.compile</code>, <code>nesh.repl</code>, and probably <code>nesh.defaults.historyFile</code>. The <code>nesh.repl</code> object should provide a Node REPL-like interface with a <code>start</code> function and return a REPL-like object which may be modified by plugins. For example:</p>
 
 <div class="highlight"><pre><span class="nv">nesh = </span><span class="nx">require</span> <span class="s">'nesh'</span>
+<span class="nv">mylang = </span><span class="nx">require</span> <span class="s">'mylang'</span>
 
 <span class="nx">nesh</span><span class="p">.</span><span class="nx">loadLanguage</span> <span class="nf">(neshRef) -&gt;</span>
     <span class="nv">neshRef.compile = </span><span class="nf">(data) -&gt;</span>
         <span class="c1"># Compile to js here</span>
+        <span class="nx">mylang</span><span class="p">.</span><span class="nx">compile</span> <span class="nx">data</span><span class="p">,</span> <span class="p">{</span><span class="nv">bare: </span><span class="kc">true</span><span class="p">}</span>
     <span class="nv">neshRef.repl =</span>
-        <span class="nv">start: </span><span class="nf">(opts, next) -&gt;</span>
+        <span class="nv">start: </span><span class="nf">(opts) -&gt;</span>
             <span class="c1"># Do stuff here!</span>
+            <span class="nv">opts.eval = </span><span class="nx">mylang</span><span class="p">.</span><span class="nb">eval</span>
+            <span class="nv">repl = </span><span class="nx">require</span><span class="p">(</span><span class="s">'repl'</span><span class="p">).</span><span class="nx">start</span> <span class="nx">opts</span>
+            <span class="k">return</span> <span class="nx">repl</span>
     <span class="nv">neshRef.defaults.welcome = </span><span class="s">'Welcome to my interpreter!'</span>
+    <span class="nv">neshRef.defaults.historyFile = </span><span class="nx">path</span><span class="p">.</span><span class="nx">join</span><span class="p">(</span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">HOME</span><span class="p">,</span> <span class="s">'.mylang_history'</span><span class="p">)</span>
 
 <span class="nx">nesh</span><span class="p">.</span><span class="nx">start</span> <span class="nf">(err) -&gt;</span>
     <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="nx">err</span> <span class="k">if</span> <span class="nx">err</span>
@@ -258,6 +264,8 @@ nesh --eval hello.js
 <code>builtins</code> Adds built-in convenience functions to the global context</li>
 <li>
 <code>eval</code> Evaluates javascript in <code>opts.evalData</code> in the context of the REPL</li>
+<li>
+<code>history</code> Provides persistent command history for multiple languages</li>
 <li>
 <code>version</code> Adds a <code>.versions</code> command to show Node, Nesh, and language versions</li>
 <li>
