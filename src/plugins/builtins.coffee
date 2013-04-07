@@ -43,3 +43,12 @@ exports.postStart = (repl) ->
     # Generate a random lowercase hexadecimal string
     repl.context.randHex = (length) ->
         repl.context.randString length, 'abcdef0123456789'
+
+    ###
+    REPL Commands
+    ###
+    repl.commands['.cls'] =
+        help: 'Clear the screen'
+        action: ->
+            repl.outputStream.write '\u001B[2J\u001B[0;0f'
+            repl.displayPrompt()
