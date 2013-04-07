@@ -153,18 +153,24 @@ Extending the Interpreter
 -------------------------
 The Nesh interpreter can be easily extended with new languages and plugins.
 
-Languages can be added using the `nesh.loadLanguage` function. New languages should override `nesh.compile` and `nesh.repl` to provide a Node REPL-like interface with a `start` function. For example:
+Languages can be added using the `nesh.loadLanguage` function. New languages should override `nesh.compile`, `nesh.repl`, and probably `nesh.defaults.historyFile`. The `nesh.repl` object should provide a Node REPL-like interface with a `start` function and return a REPL-like object which may be modified by plugins. For example:
 
 ```coffeescript
 nesh = require 'nesh'
+mylang = require 'mylang'
 
 nesh.loadLanguage (neshRef) ->
     neshRef.compile = (data) ->
         # Compile to js here
+        mylang.compile data, {bare: true}
     neshRef.repl =
-        start: (opts, next) ->
+        start: (opts) ->
             # Do stuff here!
+            opts.eval = mylang.eval
+            repl = require('repl').start opts
+            return repl
     neshRef.defaults.welcome = 'Welcome to my interpreter!'
+    neshRef.defaults.historyFile = path.join(process.env.HOME, '.mylang_history')
 
 nesh.start (err) ->
     console.log err if err
@@ -216,6 +222,7 @@ Nesh ships with several default plugins:
 
  * `builtins` Adds built-in convenience functions to the global context
  * `eval` Evaluates javascript in `opts.evalData` in the context of the REPL
+ * `history` Provides persistent command history for multiple languages
  * `version` Adds a `.versions` command to show Node, Nesh, and language versions
  * `welcome` Adds a welcome message to the interactive interpreter via `opts.welcome`
 

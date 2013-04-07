@@ -110,6 +110,6 @@ nesh.start = (opts = {}, callback) ->
             callback? err, repl
 
 # Load default plugins
-for plugin in ['eval', 'welcome', 'version']
+for plugin in ['eval', 'history', 'welcome', 'version']
     nesh.loadPlugin require("./plugins/#{plugin}"), (err) ->
         console.error "Problem loading #{plugin} plugin: ", err if err

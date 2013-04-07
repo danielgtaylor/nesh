@@ -1,6 +1,7 @@
 require 'colors'
 
 coffee = require 'coffee-script'
+path = require 'path'
 
 exports.setup = (nesh) ->
     nesh.compile = (data) ->
@@ -9,3 +10,4 @@ exports.setup = (nesh) ->
     process.versions['coffee-script'] = coffee.VERSION
     nesh.defaults.welcome = "CoffeeScript #{coffee.VERSION} on Node #{process.version}\nType " + '.help'.cyan + ' for more information'
     nesh.defaults.prompt = 'coffee> '
+    nesh.defaults.historyFile = path.join(process.env.HOME, '.coffee_history')
