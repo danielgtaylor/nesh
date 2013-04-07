@@ -1,6 +1,6 @@
 {
   "name": "nesh",
-  "version": "0.3.1",
+  "version": "0.4.0",
   "description": "An enhanced, extensible shell for Node.js",
   "homepage": "http://danielgtaylor.github.io/nesh/",
   "main": "lib/nesh.js",
@@ -29,7 +29,10 @@
     "enhanced",
     "embed",
     "embedding",
-    "coffee"
+    "coffee",
+    "plugin",
+    "learn",
+    "try"
   ],
   "author": {
     "name": "Daniel G. Taylor",
