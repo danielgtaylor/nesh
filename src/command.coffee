@@ -69,12 +69,15 @@ opts.prompt = argv.prompt if argv.prompt?
 opts.welcome = argv.welcome if argv.welcome?
 
 if argv.eval
+    isJs = false
     if fs.existsSync argv.eval
+        isJs = argv.eval[-3..] is '.js'
         opts.evalData = fs.readFileSync argv.eval, 'utf-8'
     else
         opts.evalData = argv.eval
 
-    if nesh.compile
+    if not isJs and nesh.compile
+        nesh.log.debug 'Compiling eval data'
         opts.evalData = nesh.compile opts.evalData
 
 nesh.loadPlugin require('./plugins/builtins'), (err) ->
