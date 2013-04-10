@@ -80,8 +80,5 @@ if argv.eval
         nesh.log.debug 'Compiling eval data'
         opts.evalData = nesh.compile opts.evalData
 
-nesh.loadPlugin require('./plugins/builtins'), (err) ->
-    return console.log err if err
-
-    nesh.start opts, (err) ->
-        console.error err if err
+nesh.start opts, (err) ->
+    console.error err.toString().red if err

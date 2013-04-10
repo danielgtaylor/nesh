@@ -49,6 +49,25 @@ callPluginMethod = (method, arg, callback) ->
             return callback? err
         callback()
 
+# Start the repl, processing any loaded plugins.
+start = (opts, callback) ->
+    if typeof opts is 'function'
+        callback = opts
+
+    for own key, value of nesh.defaults
+        opts[key] = value unless opts[key]?
+
+    processPlugins 'preStart', opts, (err) ->
+        return callback? err if err
+
+        repl = nesh.repl.start opts
+
+        # Expose the passed options in the repl object
+        repl.opts = opts
+
+        processPlugins 'postStart', repl, (err) ->
+            return callback? err if err
+            callback? err, repl
 
 nesh = exports
 
@@ -103,27 +122,30 @@ nesh.loadPlugin = (plugin, callback) ->
     else
         callback()
 
-# Start the repl, processing any loaded plugins.
+# Initialize nesh by autoloading plugins and preparing to start
+# a new REPL. This need not be called explicitly - if it is not
+# called then `nesh.start` will invoke it when needed. Calling
+# it explicitly gives you more control over plugin loading and
+# application startup.
+initialized = false
+nesh.init = (autoload=true, callback) ->
+    initialized = true
+    if autoload
+        # Load default plugins
+        nesh.loadPlugin 'autoload', (err) ->
+            if err then callback? "[autoload] #{err}" else callback?()
+    else
+        callback?()
+
+# Start the REPL. If `nesh.init` has not been called, then it will be
+# called before starting the REPL. Any registered plugins will have
+# their `preStart` and `postStart` event handlers called. The
+# `callback` function is given (err, repl) where err is set if there
+# was an error, and `repl` is the new REPL that was created.
 nesh.start = (opts = {}, callback) ->
-    if typeof opts is 'function'
-        callback = opts
-
-    for own key, value of nesh.defaults
-        opts[key] = value unless opts[key]?
-
-    processPlugins 'preStart', opts, (err) ->
-        return callback? err if err
-
-        repl = nesh.repl.start opts
-
-        # Expose the passed options in the repl object
-        repl.opts = opts
-
-        processPlugins 'postStart', repl, (err) ->
+    if not initialized
+        nesh.init true, (err) ->
             return callback? err if err
-            callback? err, repl
-
-# Load default plugins
-for plugin in ['eval', 'history', 'welcome', 'version']
-    nesh.loadPlugin require("./plugins/#{plugin}"), (err) ->
-        console.error "Problem loading #{plugin} plugin: ", err if err
+            return start opts, callback
+    else
+        return start opts, callback
