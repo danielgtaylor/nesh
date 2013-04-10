@@ -2,9 +2,16 @@
 Builtin Utilities Plugin
 ###
 
+_ = require 'underscore'
 crypto = require 'crypto'
 
 exports.postStart = (repl) ->
+    ###
+    Underscore utilities, see:
+    http://documentcloud.github.io/underscore
+    ###
+    repl.context.__ = _
+
     ###
     Hashing functions
     ###
