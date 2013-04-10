@@ -38,6 +38,7 @@
 <li>Lightweight &amp; fast</li>
 <li>Built-in convenience functions</li>
 <li>Easily extensible interactive environment</li>
+<li>Simple to embed in your application</li>
 <li>Asyncronous plugin architecture</li>
 <li>Multi-language support (e.g. CoffeeScript)</li>
 </ul><p><a href="https://gemnasium.com/danielgtaylor/nesh"><img src="https://gemnasium.com/danielgtaylor/nesh.png" alt="Dependency Status"></a> <a href="https://travis-ci.org/danielgtaylor/nesh"><img src="https://travis-ci.org/danielgtaylor/nesh.png?branch=master" alt="Build Status"></a></p>
@@ -84,7 +85,7 @@ nesh -c
 <div class="highlight"><pre>nesh --list-languages
 </pre></div>
 
-<p>As a shortcut for CoffeeScript, you can also use <code>nesh -c</code>. It's also pretty easy to set up an alias for this, e.g. <code>alias cs='nesh -c'</code> in bash.</p>
+<p>As a shortcut for CoffeeScript, you can use <code>nesh -c</code>. It's also pretty easy to set up an alias for this, e.g. <code>alias cs='nesh -c'</code> in bash.</p>
 
 <h3>Setting a Prompt &amp; Welcome Message</h3>
 
@@ -103,14 +104,24 @@ nesh --eval hello.js
 <div class="highlight"><pre>nesh --eval <span class="s2">"var test = 1;"</span>
 </pre></div>
 
-<p>Languages other than Javascript can also be used. When using a non-Javascript language, the code loaded will use that language's compile function before running. For example:</p>
+<p>Languages other than Javascript can also be used. When using a non-Javascript language, the code loaded will use that language's compile function before running if the loaded filename does not end in <code>.js</code>. This means it is possible to load code both in the loaded language and in plain javascript. For example:</p>
 
-<div class="highlight"><pre>nesh -c -e hello.coffee
+<div class="highlight"><pre><span class="c"># Load code from a language-specific file</span>
+nesh -c -e hello.coffee
+
+<span class="c"># Load code from a plain javascript file</span>
+nesh -c -e hello.js
 </pre></div>
 
 <h2>Convenience Functions</h2>
 
 <p>When run from the <code>nesh</code> command several built-in convenience functions are available.</p>
+
+<h3>Modules</h3>
+
+<h4>__</h4>
+
+<p>Exposes the Underscore.js library. Two underscores are used because a single underscore is reserved for the response of the last run command.</p>
 
 <h3>Hashing</h3>
 
@@ -127,6 +138,10 @@ nesh --eval hello.js
 <h4>rand ([start], [end])</h4>
 
 <p>Generate a random number. If neither <code>start</code> nor <code>end</code> are given, it returns a number between 0 and 1. If only <code>start</code> is given, a number between 0 and <code>start</code> is returned. Otherwise, a number between <code>start</code> and <code>end</code> is returned.</p>
+
+<h4>randInt ([start], [end])</h4>
+
+<p>Generate a random integer. This is a shortcut for <code>Math.round(rand(start, end))</code> and follows the same rules as <code>rand</code> for <code>start</code> and <code>end</code>.</p>
 
 <h4>randChoices (choices, [length])</h4>
 
@@ -148,9 +163,7 @@ nesh --eval hello.js
 
 <span class="nx">opts</span> <span class="o">=</span> <span class="p">{</span>
     <span class="nx">welcome</span><span class="o">:</span> <span class="s1">'Welcome!'</span><span class="p">,</span>
-    <span class="nx">prompt</span><span class="o">:</span> <span class="s1">'test&gt; '</span><span class="p">,</span>
-    <span class="nx">inputStream</span><span class="o">:</span> <span class="nx">process</span><span class="p">.</span><span class="nx">stdin</span><span class="p">,</span>
-    <span class="nx">outputStream</span><span class="o">:</span> <span class="nx">process</span><span class="p">.</span><span class="nx">stdout</span>
+    <span class="nx">prompt</span><span class="o">:</span> <span class="s1">'test&gt; '</span>
 <span class="p">};</span>
 
 <span class="nx">nesh</span><span class="p">.</span><span class="nx">loadLanguage</span><span class="p">(</span><span class="s1">'coffee'</span><span class="p">);</span>
@@ -164,9 +177,25 @@ nesh --eval hello.js
 
 <h3>Embedding Reference</h3>
 
+<h4>nesh.version</h4>
+
+<p>The Nesh version.</p>
+
 <h4>nesh.defaults</h4>
 
 <p>An object containing default values that are set when no such value is passed to <code>nesh.start</code>'s <code>opts</code> parameter.</p>
+
+<h4>nesh.compile</h4>
+
+<p>A function to compile a snippet of code into javascript.</p>
+
+<h4>nesh.repl</h4>
+
+<p>An object with a <code>start</code> function to create a new REPL-like object. Defaults to the built-in Node.js <code>repl</code> module. This can be set when a language is loaded or by plugins to provide extra functionality.</p>
+
+<h4>nesh.plugins</h4>
+
+<p>A list of loaded plugins. This is usually populated by the <code>nesh.loadPlugin</code> function.</p>
 
 <h4>nesh.languages ()</h4>
 
@@ -174,11 +203,15 @@ nesh --eval hello.js
 
 <h4>nesh.loadLanguage (name)</h4>
 
-<p>Load a language to be interpreted, e.g. <code>coffee</code> for CoffeeScript.</p>
+<p>Load a language to be interpreted, e.g. <code>coffee</code> for CoffeeScript. Can also take in a function to be called to load the language. See below in the Extending the Interpreter section for details.</p>
 
 <h4>nesh.loadPlugin (plugin)</h4>
 
-<p>Loads a plugin - see below in the Extending the Interpreter section for details.</p>
+<p>Loads a plugin by name or as an object - see below in the Extending the Interpreter section for details.</p>
+
+<h4>nesh.init (autoload, [callback])</h4>
+
+<p>Initialize the Nesh module. If <code>autoload</code> is true then a default set of plugins is loaded, as well as any plugins defined in the user configuration in <code>~/.nesh_config.json</code>. This function doesn't need to be called explicitly as it will be called by <code>nesh.start</code>, but is provided to give you more control over the loading process.</p>
 
 <h4>nesh.start ([opts], [callback])</h4>
 
@@ -186,10 +219,88 @@ nesh --eval hello.js
 
 <ul>
 <li>
-<code>welcome</code> A welcome message to be displayed on startup</li>
-<li>
 <code>evalData</code> A javascript string to execute within the REPL context on startup</li>
-</ul><h2>Extending the Interpreter</h2>
+<li>
+<code>historyFile</code> A filename in which to store command history</li>
+<li>
+<code>historyMaxInputSize</code> The maximum number of bytes of history to load</li>
+<li>
+<code>welcome</code> A welcome message to be displayed on startup</li>
+</ul><h2>Logging</h2>
+
+<p>Nesh comes with a built-in logging framework to make it easy for plugins to log information. By default, each message will be sent to stdout, which is not ideal for many applications. Therefore, it is possible to modify the logger to provide integration with whatever logging framework your application is using. There are even convenience functions to do so for popular logging frameworks. For example, if your application is using Winston:</p>
+
+<div class="highlight"><pre><span class="nv">nesh = </span><span class="nx">require</span> <span class="s">'nesh'</span>
+
+<span class="nx">nesh</span><span class="p">.</span><span class="nx">log</span><span class="p">.</span><span class="nx">winston</span><span class="p">()</span>
+
+<span class="nx">nesh</span><span class="p">.</span><span class="nx">start</span> <span class="nf">(err) -&gt;</span>
+    <span class="nx">nesh</span><span class="p">.</span><span class="nx">log</span><span class="p">.</span><span class="nx">error</span> <span class="nx">err</span> <span class="k">if</span> <span class="nx">err</span>
+</pre></div>
+
+<p>If using a different logging framework or custom log output, you can manually override the logger functions. For example:</p>
+
+<div class="highlight"><pre><span class="nv">nesh = </span><span class="nx">require</span> <span class="s">'nesh'</span>
+
+<span class="nv">nesh.log.log = </span><span class="nf">(level, message) -&gt;</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="s">"</span><span class="si">#{</span><span class="nx">level</span><span class="si">}</span><span class="s">: </span><span class="si">#{</span><span class="nx">message</span><span class="si">}</span><span class="s">"</span> <span class="k">if</span> <span class="nx">level</span> <span class="o">&gt;=</span> <span class="nx">nesh</span><span class="p">.</span><span class="nx">log</span><span class="p">.</span><span class="nx">level</span>
+
+<span class="nv">nesh.log.color = </span><span class="kc">false</span>
+
+<span class="p">...</span>
+</pre></div>
+
+<h3>Logging Reference</h3>
+
+<h4>nesh.log.DEBUG</h4>
+
+<p>The debug logging level.</p>
+
+<h4>nesh.log.INFO</h4>
+
+<p>The informational logging level.</p>
+
+<h4>nesh.log.WARN</h4>
+
+<p>The warning logging level.</p>
+
+<h4>nesh.log.ERROR</h4>
+
+<p>The error logging level.</p>
+
+<h4>nesh.log.level</h4>
+
+<p>The current logging level.</p>
+
+<h4>nesh.log.levelName ()</h4>
+
+<p>Get the name of the log level, e.g. <code>'warn'</code> for <code>nesh.log.WARN</code></p>
+
+<h4>nesh.log.log (level, message)</h4>
+
+<p>Log a message at a particular level if <code>nesh.log.level</code> allows it.</p>
+
+<h4>nesh.log.debug (message)</h4>
+
+<p>Log a debug message.</p>
+
+<h4>nesh.log.info (message)</h4>
+
+<p>Log an info message.</p>
+
+<h4>nesh.log.warn (message)</h4>
+
+<p>Log a warning message.</p>
+
+<h4>nesh.log.error (message)</h4>
+
+<p>Log an error message.</p>
+
+<h4>nesh.log.winston ()</h4>
+
+<p>Reconfigure the logging to use Winston to output messages.</p>
+
+<h2>Extending the Interpreter</h2>
 
 <p>The Nesh interpreter can be easily extended with new languages and plugins.</p>
 
@@ -240,7 +351,7 @@ nesh --eval hello.js
         <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="nx">err</span> <span class="k">if</span> <span class="nx">err</span>
 </pre></div>
 
-<p>Several plugins ship with Nesh, just take a look at the <code>src/plugins</code> directory. If these ever need to be removed then you can do so by accessing the <code>nesh.plugins</code> array.</p>
+<p>Several plugins ship with Nesh, just take a look at the <code>src/plugins</code> directory. If these ever need to be removed then you can do so by accessing the <code>nesh.plugins</code> array. You can also prevent loading the default set of plugins by manually calling <code>nesh.init</code> with <code>autoload</code> set to <code>false</code>.</p>
 
 <h3>Asyncronous Plugins</h3>
 
@@ -260,6 +371,8 @@ nesh --eval hello.js
 <p>Nesh ships with several default plugins:</p>
 
 <ul>
+<li>
+<code>autoload</code> A plugin which automatically loads other plugins</li>
 <li>
 <code>builtins</code> Adds built-in convenience functions to the global context</li>
 <li>
