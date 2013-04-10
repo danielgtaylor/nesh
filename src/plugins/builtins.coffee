@@ -27,6 +27,10 @@ exports.postStart = (repl) ->
 
         Math.random() * (end - start) + start
 
+    # Generate a random integer
+    repl.context.randInt = (start, end) ->
+        Math.round repl.context.rand(start, end)
+
     # Generate a random list of choices from an array
     repl.context.randChoices = (choices, length=1) ->
         result = []
