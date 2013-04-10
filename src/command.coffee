@@ -33,6 +33,9 @@ optimist = require('optimist')
         alias: 'version'
         describe: 'Show version and exit'
         boolean: true
+    .options 'verbose',
+        describe: 'Enable verbose debug output'
+        boolean: true
     .options 'w',
         alias: 'welcome'
         describe: 'Set welcome message'
@@ -45,12 +48,15 @@ if argv.h
     return
 
 if argv.v
-    console.log "nesh version #{nesh.version}"
+    nesh.log.info "nesh version #{nesh.version}"
     return
 
 if argv['list-languages']
-    console.log nesh.languages().join ', '
+    nesh.log.info nesh.languages().join ', '
     return
+
+if argv.verbose
+    nesh.log.level = nesh.log.DEBUG
 
 if argv.c
     argv.lang = 'coffee'

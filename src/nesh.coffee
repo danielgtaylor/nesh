@@ -66,6 +66,10 @@ nesh.repl = require 'repl'
 # A list of currently loaded plugins
 nesh.plugins = []
 
+# Logging functions that can be overridden to hook into
+# various logging frameworks (e.g. winston, log4js)
+nesh.log = require './log'
+
 # Get a list of built-in languages that can be loaded
 nesh.languages = ->
     # List every js file without its extension in the languages directory
