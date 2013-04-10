@@ -80,5 +80,7 @@ if argv.eval
         nesh.log.debug 'Compiling eval data'
         opts.evalData = nesh.compile opts.evalData
 
+nesh.config.load()
+
 nesh.start opts, (err) ->
     console.error err.toString().red if err

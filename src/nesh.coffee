@@ -85,6 +85,9 @@ nesh.repl = require 'repl'
 # A list of currently loaded plugins
 nesh.plugins = []
 
+# User configuration
+nesh.config = require './config'
+
 # Logging functions that can be overridden to hook into
 # various logging frameworks (e.g. winston, log4js)
 nesh.log = require './log'

@@ -23,25 +23,18 @@ path = require 'path'
 
 exports.setup = (defaults, next) ->
     nesh.log.debug 'Loading plugin autoload'
-    
+
     # The default list of plugins
     defaultPlugins = ['builtins', 'eval', 'history', 'version', 'welcome']
 
-    configPath = path.join process.env.HOME, '.nesh_config.json'
-    if fs.existsSync configPath
-        config = {}
+    # Get the Nesh user configuration
+    config = nesh.config.get()
 
-        # Try to load the config file
-        try
-            config = require configPath
-        catch e
-            console.log "Error loading Nesh config from #{configPath}: #{e}"
+    # Add plugins from config to the list of loaded plugins
+    defaultPlugins = _(defaultPlugins.concat config.plugins).uniq() if config.plugins?
 
-        # Add plugins from config to the list of loaded plugins
-        defaultPlugins = _(defaultPlugins.concat config.plugins).uniq() if config.plugins?
-
-        # Remove excluded plugins from the list of loaded plugins
-        defaultPlugins = _(defaultPlugins).reject((item) -> item in config.pluginsExclude) if config.pluginsExclude?
+    # Remove excluded plugins from the list of loaded plugins
+    defaultPlugins = _(defaultPlugins).reject((item) -> item in config.pluginsExclude) if config.pluginsExclude?
 
     # Set the list of loaded plugins so they are available to other plugins
     defaults.plugins ?= defaultPlugins

@@ -131,11 +131,16 @@ opts = {
     prompt: 'test> '
 };
 
+// Load user configuration
+nesh.config.load();
+
+// Load CoffeeScript
 nesh.loadLanguage('coffee');
 
+// Start the REPL
 nesh.start(opts, function (err) {
     if (err) {
-        console.log(err);
+        nesh.log.error(err);
     }
 });
 ```
@@ -144,6 +149,9 @@ nesh.start(opts, function (err) {
 
 #### nesh.version
 The Nesh version.
+
+#### nesh.config
+The configuration module. See below in the Configuration section for more information.
 
 #### nesh.defaults
 An object containing default values that are set when no such value is passed to `nesh.start`'s `opts` parameter.
@@ -177,6 +185,24 @@ Create a new nesh REPL with the passed options `opts`. Allowed options include t
  * `historyMaxInputSize` The maximum number of bytes of history to load
  * `welcome` A welcome message to be displayed on startup
 
+Configuration
+-------------
+Nesh provides a basic configuration system that by default stores data in `~/.nesh_config.json`. This system is usable by plugins, languages, etc. The `nesh` command loads this configuration file on startup. When embedding the interpreter, you may wish to do this as well via the `nesh.config.load()` function.
+
+### Configuration Reference
+
+#### nesh.config.path
+The path to the default configuration file location.
+
+#### nesh.config.load ([path])
+Loads a configuration file. Once loaded, the config may be accessed via `nesh.config.get()`. Note: this may throw errors if parsing the file fails.
+
+#### nesh.config.save ([path])
+Saves a configuration file. Note: this may throw errors if the path cannot be written to, you are over your disk quota, etc.
+
+#### nesh.config.get ()
+Get the currently loaded configuration. This defaults to `{}`.
+
 Logging
 -------
 Nesh comes with a built-in logging framework to make it easy for plugins to log information. By default, each message will be sent to stdout, which is not ideal for many applications. Therefore, it is possible to modify the logger to provide integration with whatever logging framework your application is using. There are even convenience functions to do so for popular logging frameworks. For example, if your application is using Winston:
@@ -195,11 +221,11 @@ If using a different logging framework or custom log output, you can manually ov
 ```coffeescript
 nesh = require 'nesh'
 
+...
 nesh.log.log = (level, message) ->
     console.log "#{level}: #{message}" if level >= nesh.log.level
 
 nesh.log.color = false
-
 ...
 ```
 
