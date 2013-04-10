@@ -87,6 +87,16 @@ nesh.loadLanguage = (data) ->
 
 # Add a new plugin. Callback is passed an error object if one occurs.
 nesh.loadPlugin = (plugin, callback) ->
+    if typeof(plugin) is 'string'
+        # Find the right place to import this plugin
+        try
+            plugin = require "./plugins/#{plugin}"
+        catch e
+            try
+                plugin = require plugin
+            catch e
+                callback "Could not find plugin '#{plugin}'!"
+
     nesh.plugins.push plugin
     if plugin.setup
         callPluginMethod plugin.setup, nesh.defaults, callback
