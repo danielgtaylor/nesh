@@ -14,7 +14,7 @@ require 'colors'
 # Plugin setup - run when the plugin is loaded
 # This adds a new setting to the default options
 exports.setup = (defaults) ->
-        defaults.welcome = "Node #{process.version}\nType " +
+        defaults.welcome ?= "Node #{process.version}\nType " +
             ".help".cyan + " for more information"
 
 # The preStart action - run before the repl is started
