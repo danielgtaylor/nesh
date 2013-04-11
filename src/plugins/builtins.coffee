@@ -5,6 +5,9 @@ Builtin Utilities Plugin
 _ = require 'underscore'
 crypto = require 'crypto'
 
+exports.name = 'builtins'
+exports.description = 'Exposes built-in convenience methods'
+
 exports.postStart = (repl) ->
     ###
     Underscore utilities, see:

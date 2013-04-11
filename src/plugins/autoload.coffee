@@ -21,6 +21,9 @@ fs = require 'fs'
 nesh = require '../nesh'
 path = require 'path'
 
+exports.name = 'autoload'
+exports.description = 'Loads a default list of plugins'
+
 exports.setup = (defaults, next) ->
     nesh.log.debug 'Loading plugin autoload'
 

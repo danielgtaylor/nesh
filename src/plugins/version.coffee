@@ -9,6 +9,9 @@ you run `.help`.
 coffee = require 'coffee-script'
 nesh = require '../nesh'
 
+exports.name = 'version'
+exports.description = 'Adds a .versions command'
+
 exports.setup = (defaults) ->
     process.versions.nesh = nesh.version
 

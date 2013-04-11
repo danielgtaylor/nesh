@@ -11,6 +11,9 @@ The welcome message can be set like so:
 ###
 require 'colors'
 
+exports.name = 'welcome'
+exports.description = 'Displays a welcome message on startup'
+
 # Plugin setup - run when the plugin is loaded
 # This adds a new setting to the default options
 exports.setup = (defaults) ->

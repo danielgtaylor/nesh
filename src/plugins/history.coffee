@@ -17,6 +17,9 @@ null or false in the interpreter options on startup:
 fs = require 'fs'
 path = require 'path'
 
+exports.name = 'history'
+exports.description = 'Provides persistent history between sessions'
+
 exports.setup = (defaults) ->
     defaults.historyFile ?= path.join(process.env.HOME, '.node_history')
     defaults.historyMaxInputSize ?= 10240

@@ -294,13 +294,15 @@ nesh.start (err) ->
     console.log err if err
 ```
 
-Plugins may define `setup`, `preStart`, and `postStart` functions that are called when the plugin is loaded, before a REPL is created, and after a REPL has been created respectively. Plugins are loaded via the `nesh.loadPlugin` function. A very simple example plugin written in CoffeeScript might look like this:
+Plugins should set a `name` and `description`. Plugins may also define `setup`, `preStart`, and `postStart` functions that are called when the plugin is loaded, before a REPL is created, and after a REPL has been created respectively. Plugins are loaded via the `nesh.loadPlugin` function. A very simple example plugin written in CoffeeScript might look like this:
 
 ```coffeescript
 nesh = require 'nesh'
 util = require 'util'
 
 myPlugin =
+    name: "myplugin"
+    description: "Some description here"
     setup: (defaults) ->
         console.log 'Setting up my plugin! Defaults:'
         console.log util.inspect defaults
