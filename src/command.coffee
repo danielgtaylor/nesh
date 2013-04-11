@@ -2,6 +2,7 @@
 The nesh command, which parses options and then drops the user
 into an interactive session.
 ###
+_ = require 'underscore'
 fs = require 'fs'
 nesh = require './nesh'
 
@@ -10,9 +11,15 @@ optimist = require('optimist')
     .options 'c',
         describe: 'Load CoffeeScript; shortcut for -l coffee'
         boolean: true
+    .options 'disable',
+        describe: 'Disable plugin(s) for autoload'
+        string: true
     .options 'e',
         alias: 'eval'
         describe: 'Filename or string to eval in the REPL context'
+        string: true
+    .options 'enable',
+        describe: 'Enable plugin(s) for autoload'
         string: true
     .options 'h',
         alias: 'help'
@@ -29,6 +36,9 @@ optimist = require('optimist')
         alias: 'prompt'
         describe: 'Set prompt string'
         string: true
+    .options 'plugins',
+        describe: 'List auto-loaded plugins'
+        boolean: true
     .options 'v',
         alias: 'version'
         describe: 'Show version and exit'
@@ -58,6 +68,33 @@ if argv['list-languages']
 if argv.verbose
     nesh.log.level = nesh.log.DEBUG
 
+nesh.config.load()
+
+if argv.enable
+    enabled = argv.enable.split ','
+
+    config = nesh.config.get()
+    config.plugins ?= []
+    config.plugins = _(config.plugins.concat enabled).uniq()
+    config.pluginsExclude ?= []
+    config.pluginsExclude = _(config.pluginsExclude).reject (item) -> item in enabled
+
+    nesh.config.save()
+
+if argv.disable
+    disabled = argv.disable.split ','
+
+    config = nesh.config.get()
+    config.plugins ?= []
+    config.plugins = _(config.plugins).reject (item) -> item in disabled
+    config.pluginsExclude ?= []
+    config.pluginsExclude = _(config.pluginsExclude.concat disabled).uniq()
+
+    nesh.config.save()
+
+if argv.enable or argv.disable
+    return
+
 if argv.c
     argv.lang = 'coffee'
 
@@ -80,7 +117,13 @@ if argv.eval
         nesh.log.debug 'Compiling eval data'
         opts.evalData = nesh.compile opts.evalData
 
-nesh.config.load()
+nesh.init true, (err) ->
+    return nesh.log.error err if err
 
-nesh.start opts, (err) ->
-    console.error err.toString().red if err
+    if argv.plugins
+        for plugin in nesh.plugins
+            nesh.log.info "#{plugin.name}: #{plugin.description}"
+        return
+
+    nesh.start opts, (err) ->
+        nesh.log.error err if err
