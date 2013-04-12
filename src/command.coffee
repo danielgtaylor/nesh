@@ -3,8 +3,10 @@ The nesh command, which parses options and then drops the user
 into an interactive session.
 ###
 _ = require 'underscore'
+{exec} = require 'child_process'
 fs = require 'fs'
 nesh = require './nesh'
+path = require 'path'
 
 optimist = require('optimist')
     .usage('$0 [options]')
@@ -73,6 +75,15 @@ nesh.config.load()
 if argv.enable
     enabled = argv.enable.split ','
 
+    install = enabled.filter (item) ->
+        not fs.existsSync "./plugins/#{item}.js"
+
+    prefix = path.join process.env.HOME, '.nesh_modules'
+    if install.length
+        exec "npm --prefix=#{prefix} --color=always install #{install.join ' '} 2>&1", (err, stdout) ->
+            nesh.log.info stdout
+            throw err if err
+
     config = nesh.config.get()
     config.plugins ?= []
     config.plugins = _(config.plugins.concat enabled).uniq()
@@ -83,6 +94,15 @@ if argv.enable
 
 if argv.disable
     disabled = argv.disable.split ','
+
+    prefix = path.join process.env.HOME, '.nesh_modules'
+    uninstall = disabled.filter (item) ->
+        fs.existsSync path.join(prefix, 'node_modules', item)
+
+    if uninstall.length
+        exec "npm --prefix=#{prefix} --color=always rm #{uninstall.join ' '} 2>&1", (err, stdout) ->
+            nesh.log.info stdout
+            throw err if err
 
     config = nesh.config.get()
     config.plugins ?= []

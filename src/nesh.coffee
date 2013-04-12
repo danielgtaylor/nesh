@@ -6,6 +6,7 @@ your apps.
 ###
 fs = require 'fs'
 neshInfo = require '../package'
+path = require 'path'
 
 ###
 Process a method call on all loaded plugins. This calls the requested
@@ -110,14 +111,20 @@ nesh.loadLanguage = (data) ->
 # Add a new plugin. Callback is passed an error object if one occurs.
 nesh.loadPlugin = (plugin, callback) ->
     if typeof(plugin) is 'string'
+        name = plugin
         # Find the right place to import this plugin
         try
-            plugin = require "./plugins/#{plugin}"
+            plugin = require "./plugins/#{name}"
         catch e
             try
-                plugin = require plugin
+                prefix = path.join process.env.HOME, '.nesh_modules', 'node_modules'
+                plugin = require path.join(prefix, name)
             catch e
-                callback "Could not find plugin '#{plugin}'!"
+                return callback "Could not find plugin '#{name}': #{e}!"
+
+        # No name defined? Use the filename I guess...
+        plugin.name ?= name
+        plugin.description ?= 'No description'
 
     nesh.plugins.push plugin
     if plugin.setup
