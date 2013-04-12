@@ -16,14 +16,16 @@ exports.description = 'Displays a welcome message on startup'
 
 # Plugin setup - run when the plugin is loaded
 # This adds a new setting to the default options
-exports.setup = (defaults) ->
-        defaults.welcome ?= "Node #{process.version}\nType " +
-            ".help".cyan + " for more information"
+exports.setup = (context) ->
+    {defaults} = context.nesh
+    defaults.welcome ?= "Node #{process.version}\nType " +
+        ".help".cyan + " for more information"
 
 # The preStart action - run before the repl is started
 # If a welcome message is set, then output it on the repl's
 # output stream.
-exports.preStart = (opts) ->
-        if opts.welcome
-            outStream = opts.outputStream or process.stdout
-            outStream.write "#{opts.welcome}\n"
+exports.preStart = (context) ->
+    {options} = context
+    if options.welcome
+        outStream = options.outputStream or process.stdout
+        outStream.write "#{options.welcome}\n"

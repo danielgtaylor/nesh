@@ -8,6 +8,7 @@ An enhanced extensible interactive interpreter (REPL) for Node.js and languages 
  * Simple to embed in your application
  * Asyncronous plugin architecture
  * Multi-language support (e.g. CoffeeScript)
+ * Per-user plugin management
 
 [![Dependency Status](https://gemnasium.com/danielgtaylor/nesh.png)](https://gemnasium.com/danielgtaylor/nesh) [![Build Status](https://travis-ci.org/danielgtaylor/nesh.png?branch=master)](https://travis-ci.org/danielgtaylor/nesh)
 
@@ -84,6 +85,33 @@ nesh -c -e hello.coffee
 # Load code from a plain javascript file
 nesh -c -e hello.js
 ```
+
+Plugins
+-------
+Plugins can add functionality to Nesh. Plugins are published via NPM just like any other Node.js package. Plugins published via NPM should use `nesh-` as the naming prefix, which makes them easier to find. You can install and enable new plugins easily:
+
+```bash
+# Install and enable a plugin called nesh-hello
+nesh --enable nesh-hello
+
+# Remove and disable a plugin called nesh-hello
+nesh --disable nesh-hello
+```
+
+It's also possible to blacklist built-in plugins from loading on startup:
+
+```bash
+# Prevent welcome message from ever showing
+nesh --disable welcome
+```
+
+You can see a list of loaded plugins via the `--plugins` option:
+
+```bash
+nesh --plugins
+```
+
+See the section below on Extending the Interpreter for information on how to write plugins.
 
 Convenience Functions
 ---------------------
@@ -168,7 +196,7 @@ A list of loaded plugins. This is usually populated by the `nesh.loadPlugin` fun
 #### nesh.languages ()
 Get a list of supported built-in languages that can be passed as strings to `nesh.loadLanguage`.
 
-#### nesh.loadLanguage (name)
+#### nesh.loadLanguage (language)
 Load a language to be interpreted, e.g. `coffee` for CoffeeScript. Can also take in a function to be called to load the language. See below in the Extending the Interpreter section for details.
 
 #### nesh.loadPlugin (plugin)
@@ -271,27 +299,34 @@ Extending the Interpreter
 -------------------------
 The Nesh interpreter can be easily extended with new languages and plugins.
 
-Languages can be added using the `nesh.loadLanguage` function. New languages should override `nesh.compile`, `nesh.repl`, and probably `nesh.defaults.historyFile`. The `nesh.repl` object should provide a Node REPL-like interface with a `start` function and return a REPL-like object which may be modified by plugins. For example:
+Languages can be added using the `nesh.loadLanguage` function. New languages should override `nesh.compile`, `nesh.repl`, and probably `nesh.defaults.historyFile`. The `nesh.repl` object should provide a Node REPL-like interface with a `start` function and return a REPL-like object which may be modified by plugins. The `context` object has the following attributes:
+
+| Attribute | Description                    | Introduced |
+| --------- | ------------------------------ | ----------:|
+| `nesh`    | A reference to the Nesh module |      1.0.0 |
+
+For example:
 
 ```coffeescript
 nesh = require 'nesh'
 mylang = require 'mylang'
 
-nesh.loadLanguage (neshRef) ->
-    neshRef.compile = (data) ->
+nesh.loadLanguage (context) ->
+    nesh.compile = (data) ->
         # Compile to js here
         mylang.compile data, {bare: true}
-    neshRef.repl =
+    nesh.repl =
         start: (opts) ->
             # Do stuff here!
             opts.eval = mylang.eval
             repl = require('repl').start opts
+            # Don't forget to return the REPL!
             return repl
-    neshRef.defaults.welcome = 'Welcome to my interpreter!'
-    neshRef.defaults.historyFile = path.join(process.env.HOME, '.mylang_history')
+    nesh.defaults.welcome = 'Welcome to my interpreter!'
+    nesh.defaults.historyFile = path.join(process.env.HOME, '.mylang_history')
 
 nesh.start (err) ->
-    console.log err if err
+    nesh.log.error err if err
 ```
 
 Plugins should set a `name` and `description`. Plugins may also define `setup`, `preStart`, and `postStart` functions that are called when the plugin is loaded, before a REPL is created, and after a REPL has been created respectively. Plugins are loaded via the `nesh.loadPlugin` function. A very simple example plugin written in CoffeeScript might look like this:
@@ -303,23 +338,26 @@ util = require 'util'
 myPlugin =
     name: "myplugin"
     description: "Some description here"
-    setup: (defaults) ->
-        console.log 'Setting up my plugin! Defaults:'
-        console.log util.inspect defaults
+    setup: (context) ->
+        {defaults} = context
+        nesh.log.info 'Setting up my plugin! Defaults:'
+        nesh.log.info util.inspect defaults
 
-    preStart: (opts) ->
-        console.log 'About to start the interpreter with these options:'
-        console.log util.inspect opts
+    preStart: (context) ->
+        {options} = context
+        nesh.log.info 'About to start the interpreter with these options:'
+        nesh.log.info util.inspect options
 
-    postStart: (repl) ->
-        console.log 'Interpreter started! REPL:'
-        console.log util.inspect repl
+    postStart: (context) ->
+        {repl} = context
+        nesh.log.info 'Interpreter started! REPL:'
+        nesh.log.info util.inspect repl
 
 nesh.loadPlugin myPlugin, (err) ->
-    console.log err if err
+    nesh.log.error err if err
 
     nesh.start (err) ->
-        console.log err if err
+        nesh.log.error err if err
 ```
 
 Several plugins ship with Nesh, just take a look at the `src/plugins` directory. If these ever need to be removed then you can do so by accessing the `nesh.plugins` array. You can also prevent loading the default set of plugins by manually calling `nesh.init` with `autoload` set to `false`.
@@ -329,7 +367,8 @@ Sometimes, a plugin may take actions that must run asyncronously. To support the
 
 ```coffeescript
 myPlugin =
-    setup: (defaults, next) ->
+    setup: (context, next) ->
+        {defaults} = context.nesh
         mongodb.findOne name: 'defaultWelcome', (err, item) ->
             return next(err) if err
 
@@ -349,18 +388,33 @@ Nesh ships with several default plugins:
 
 ### Plugin Reference
 
-#### Plugin.setup (defaults, [next])
-Called when the plugin is first loaded. The `defaults` passed in are an object containing default values that will be used to initialize the interpreter when `nesh.start` is called. If `next` is defined, then the function is treated as asyncronous and `next` will be passed a function that must be called when finished. If an error occurs, then the error should be passed to `next`.
+#### Plugin.setup (context, [next])
+Called when the plugin is first loaded. If `next` is defined, then the function is treated as asyncronous and `next` will be passed a function that must be called when finished. If an error occurs, then the error should be passed to `next`. The `context` passed in is an object containing the values defined below:
 
-This is a good place to add or modify default values.
+| Attribute | Description                    | Introduced |
+| --------- | ------------------------------ | ----------:|
+| `nesh`    | A reference to the Nesh module |      1.0.0 |
 
-#### Plugin.preStart (opts, [next])
-Called when `nesh.start` has been called but before the REPL is created and started. The `opts` passed in are a merged object made from the Nesh defaults and any options passed to `nesh.start`. If `next` is defined, then the function is treated as asyncronous and `next` will be passed a function that must be called when finished. If an error occurs, then the error should be passed to `next`.
+This is a good place to add or modify default values via `context.nesh.defaults`.
 
-This is a good place to print out information or modify the passed in options before they are sent to the REPL.
+#### Plugin.preStart (context, [next])
+Called when `nesh.start` has been called but before the REPL is created and started. If `next` is defined, then the function is treated as asyncronous and `next` will be passed a function that must be called when finished. If an error occurs, then the error should be passed to `next`. The `context` passed in is an object containing the values defined below:
 
-#### Plugin.postStart (repl, [next])
+| Attribute | Description                        | Introduced |
+| --------- | ---------------------------------- | ----------:|
+| `nesh`    | A reference to the Nesh module     |      1.0.0 |
+| `options` | The options passed to `nesh.start` |      1.0.0 |
+
+This is a good place to print out information or modify the passed in options before they are sent to the REPL, e.g. `context.options.welcome = 'foo'`.
+
+#### Plugin.postStart (context, [next])
 Called when `nesh.start` has been called and the REPL is started. The `repl` passed in is the newly created and started REPL from the `nesh.start` call and includes the `opts` from above as `repl.opts`. If `next` is defined, then the function is treated as asyncronous and `next` will be passed a function that must be called when finished. If an error occurs, then the error should be passed to `next`.
+
+| Attribute | Description                        | Introduced |
+| --------- | ---------------------------------- | ----------:|
+| `nesh`    | A reference to the Nesh module     |      1.0.0 |
+| `options` | The options passed to `nesh.start` |      1.0.0 |
+| `repl`    | The created REPL instance          |      1.0.0 |
 
 This is a good place to modify the REPL, e.g. adding new commands, modifying history, listening for specific key strokes, etc.
 
@@ -395,6 +449,21 @@ The unit test suite can be run via the following:
 
 ```bash
 cake test
+```
+
+### Testing new plugins
+You can test out new plugins that have their own NPM package by linking them into the plugins directory:
+
+```bash
+ln -s ~/Projects/nesh-myplugin ~/.nesh_modules/node_modules/
+```
+
+Then modify your `~/.nesh_config.json` file to enable the plugin. A minimal configuration looks like the following:
+
+```javascript
+{
+    plugins: ["nesh-myplugin"]
+}
 ```
 
 License

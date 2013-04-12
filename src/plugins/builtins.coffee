@@ -8,7 +8,9 @@ crypto = require 'crypto'
 exports.name = 'builtins'
 exports.description = 'Exposes built-in convenience methods'
 
-exports.postStart = (repl) ->
+exports.postStart = (context) ->
+    {repl} = context
+    
     ###
     Underscore utilities, see:
     http://documentcloud.github.io/underscore

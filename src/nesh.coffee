@@ -58,7 +58,7 @@ start = (opts, callback) ->
     for own key, value of nesh.defaults
         opts[key] = value unless opts[key]?
 
-    processPlugins 'preStart', opts, (err) ->
+    processPlugins 'preStart', {nesh, options: opts}, (err) ->
         return callback? err if err
 
         repl = nesh.repl.start opts
@@ -66,7 +66,7 @@ start = (opts, callback) ->
         # Expose the passed options in the repl object
         repl.opts = opts
 
-        processPlugins 'postStart', repl, (err) ->
+        processPlugins 'postStart', {nesh, options: opts, repl}, (err) ->
             return callback? err if err
             callback? err, repl
 
@@ -102,9 +102,9 @@ nesh.languages = ->
 nesh.loadLanguage = (data) ->
     switch typeof data
         when 'function'
-            data nesh
+            data {nesh}
         when 'string'
-            require("./languages/#{data}").setup nesh
+            require("./languages/#{data}").setup {nesh}
         else
             throw new Error "Data must be a function or string! Received #{data}"
 
@@ -128,7 +128,7 @@ nesh.loadPlugin = (plugin, callback) ->
 
     nesh.plugins.push plugin
     if plugin.setup
-        callPluginMethod plugin.setup, nesh.defaults, callback
+        callPluginMethod plugin.setup, {nesh}, callback
     else
         callback()
 

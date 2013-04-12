@@ -24,7 +24,8 @@ path = require 'path'
 exports.name = 'autoload'
 exports.description = 'Loads a default list of plugins'
 
-exports.setup = (defaults, next) ->
+exports.setup = (context, next) ->
+    {defaults} = context.nesh
     nesh.log.debug 'Loading plugin autoload'
 
     # The default list of plugins

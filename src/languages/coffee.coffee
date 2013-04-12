@@ -4,7 +4,8 @@ coffee = require 'coffee-script'
 log = require '../log'
 path = require 'path'
 
-exports.setup = (nesh) ->
+exports.setup = (context) ->
+    {nesh} = context
     log.debug 'Loading CoffeeScript'
     nesh.compile = (data) ->
         coffee.compile data, {bare: true, header: false}

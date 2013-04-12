@@ -20,11 +20,14 @@ path = require 'path'
 exports.name = 'history'
 exports.description = 'Provides persistent history between sessions'
 
-exports.setup = (defaults) ->
+exports.setup = (context) ->
+    {defaults} = context.nesh
     defaults.historyFile ?= path.join(process.env.HOME, '.node_history')
     defaults.historyMaxInputSize ?= 10240
 
-exports.postStart = (repl) ->
+exports.postStart = (context) ->
+    {repl} = context
+    
     # Skip if we have no file to use
     return unless repl.opts.historyFile
 

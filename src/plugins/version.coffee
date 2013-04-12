@@ -12,12 +12,13 @@ nesh = require '../nesh'
 exports.name = 'version'
 exports.description = 'Adds a .versions command'
 
-exports.setup = (defaults) ->
+exports.setup = (context) ->
     process.versions.nesh = nesh.version
 
 # The postStart action - run after the repl is created
 # This adds the `.versions` command to the interpreter
-exports.postStart = (repl) ->
+exports.postStart = (context) ->
+    {repl} = context
     repl.commands['.versions'] =
         help: 'Show Node version information'
         action: ->
