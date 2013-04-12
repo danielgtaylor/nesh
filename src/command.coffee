@@ -142,7 +142,7 @@ nesh.init true, (err) ->
 
     if argv.plugins
         for plugin in nesh.plugins
-            nesh.log.info "#{plugin.name}: #{plugin.description}"
+            nesh.log.info "#{plugin.name}: " + "#{plugin.description}".grey
         return
 
     nesh.start opts, (err) ->
