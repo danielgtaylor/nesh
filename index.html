@@ -41,6 +41,7 @@
 <li>Simple to embed in your application</li>
 <li>Asyncronous plugin architecture</li>
 <li>Multi-language support (e.g. CoffeeScript)</li>
+<li>Per-user plugin management</li>
 </ul><p><a href="https://gemnasium.com/danielgtaylor/nesh"><img src="https://gemnasium.com/danielgtaylor/nesh.png" alt="Dependency Status"></a> <a href="https://travis-ci.org/danielgtaylor/nesh"><img src="https://travis-ci.org/danielgtaylor/nesh.png?branch=master" alt="Build Status"></a></p>
 
 <h2>Installation</h2>
@@ -113,6 +114,30 @@ nesh -c -e hello.coffee
 nesh -c -e hello.js
 </pre></div>
 
+<h2>Plugins</h2>
+
+<p>Plugins can add functionality to Nesh. Plugins are published via NPM just like any other Node.js package. Plugins published via NPM should use <code>nesh-</code> as the naming prefix, which makes them easier to find. You can install and enable new plugins easily:</p>
+
+<div class="highlight"><pre><span class="c"># Install and enable a plugin called nesh-hello</span>
+nesh --enable nesh-hello
+
+<span class="c"># Remove and disable a plugin called nesh-hello</span>
+nesh --disable nesh-hello
+</pre></div>
+
+<p>It's also possible to blacklist built-in plugins from loading on startup:</p>
+
+<div class="highlight"><pre><span class="c"># Prevent welcome message from ever showing</span>
+nesh --disable welcome
+</pre></div>
+
+<p>You can see a list of loaded plugins via the <code>--plugins</code> option:</p>
+
+<div class="highlight"><pre>nesh --plugins
+</pre></div>
+
+<p>See the section below on Extending the Interpreter for information on how to write plugins.</p>
+
 <h2>Convenience Functions</h2>
 
 <p>When run from the <code>nesh</code> command several built-in convenience functions are available.</p>
@@ -166,11 +191,16 @@ nesh -c -e hello.js
     <span class="nx">prompt</span><span class="o">:</span> <span class="s1">'test&gt; '</span>
 <span class="p">};</span>
 
+<span class="c1">// Load user configuration</span>
+<span class="nx">nesh</span><span class="p">.</span><span class="nx">config</span><span class="p">.</span><span class="nx">load</span><span class="p">();</span>
+
+<span class="c1">// Load CoffeeScript</span>
 <span class="nx">nesh</span><span class="p">.</span><span class="nx">loadLanguage</span><span class="p">(</span><span class="s1">'coffee'</span><span class="p">);</span>
 
+<span class="c1">// Start the REPL</span>
 <span class="nx">nesh</span><span class="p">.</span><span class="nx">start</span><span class="p">(</span><span class="nx">opts</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="p">{</span>
     <span class="k">if</span> <span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="p">{</span>
-        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">err</span><span class="p">);</span>
+        <span class="nx">nesh</span><span class="p">.</span><span class="nx">log</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="nx">err</span><span class="p">);</span>
     <span class="p">}</span>
 <span class="p">});</span>
 </pre></div>
@@ -180,6 +210,10 @@ nesh -c -e hello.js
 <h4>nesh.version</h4>
 
 <p>The Nesh version.</p>
+
+<h4>nesh.config</h4>
+
+<p>The configuration module. See below in the Configuration section for more information.</p>
 
 <h4>nesh.defaults</h4>
 
@@ -201,7 +235,7 @@ nesh -c -e hello.js
 
 <p>Get a list of supported built-in languages that can be passed as strings to <code>nesh.loadLanguage</code>.</p>
 
-<h4>nesh.loadLanguage (name)</h4>
+<h4>nesh.loadLanguage (language)</h4>
 
 <p>Load a language to be interpreted, e.g. <code>coffee</code> for CoffeeScript. Can also take in a function to be called to load the language. See below in the Extending the Interpreter section for details.</p>
 
@@ -226,7 +260,29 @@ nesh -c -e hello.js
 <code>historyMaxInputSize</code> The maximum number of bytes of history to load</li>
 <li>
 <code>welcome</code> A welcome message to be displayed on startup</li>
-</ul><h2>Logging</h2>
+</ul><h2>Configuration</h2>
+
+<p>Nesh provides a basic configuration system that by default stores data in <code>~/.nesh_config.json</code>. This system is usable by plugins, languages, etc. The <code>nesh</code> command loads this configuration file on startup. When embedding the interpreter, you may wish to do this as well via the <code>nesh.config.load()</code> function.</p>
+
+<h3>Configuration Reference</h3>
+
+<h4>nesh.config.path</h4>
+
+<p>The path to the default configuration file location.</p>
+
+<h4>nesh.config.load ([path])</h4>
+
+<p>Loads a configuration file. Once loaded, the config may be accessed via <code>nesh.config.get()</code>. Note: this may throw errors if parsing the file fails.</p>
+
+<h4>nesh.config.save ([path])</h4>
+
+<p>Saves a configuration file. Note: this may throw errors if the path cannot be written to, you are over your disk quota, etc.</p>
+
+<h4>nesh.config.get ()</h4>
+
+<p>Get the currently loaded configuration. This defaults to <code>{}</code>.</p>
+
+<h2>Logging</h2>
 
 <p>Nesh comes with a built-in logging framework to make it easy for plugins to log information. By default, each message will be sent to stdout, which is not ideal for many applications. Therefore, it is possible to modify the logger to provide integration with whatever logging framework your application is using. There are even convenience functions to do so for popular logging frameworks. For example, if your application is using Winston:</p>
 
@@ -242,11 +298,11 @@ nesh -c -e hello.js
 
 <div class="highlight"><pre><span class="nv">nesh = </span><span class="nx">require</span> <span class="s">'nesh'</span>
 
+<span class="p">...</span>
 <span class="nv">nesh.log.log = </span><span class="nf">(level, message) -&gt;</span>
     <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="s">"</span><span class="si">#{</span><span class="nx">level</span><span class="si">}</span><span class="s">: </span><span class="si">#{</span><span class="nx">message</span><span class="si">}</span><span class="s">"</span> <span class="k">if</span> <span class="nx">level</span> <span class="o">&gt;=</span> <span class="nx">nesh</span><span class="p">.</span><span class="nx">log</span><span class="p">.</span><span class="nx">level</span>
 
 <span class="nv">nesh.log.color = </span><span class="kc">false</span>
-
 <span class="p">...</span>
 </pre></div>
 
@@ -304,51 +360,70 @@ nesh -c -e hello.js
 
 <p>The Nesh interpreter can be easily extended with new languages and plugins.</p>
 
-<p>Languages can be added using the <code>nesh.loadLanguage</code> function. New languages should override <code>nesh.compile</code>, <code>nesh.repl</code>, and probably <code>nesh.defaults.historyFile</code>. The <code>nesh.repl</code> object should provide a Node REPL-like interface with a <code>start</code> function and return a REPL-like object which may be modified by plugins. For example:</p>
+<p>Languages can be added using the <code>nesh.loadLanguage</code> function. New languages should override <code>nesh.compile</code>, <code>nesh.repl</code>, and probably <code>nesh.defaults.historyFile</code>. The <code>nesh.repl</code> object should provide a Node REPL-like interface with a <code>start</code> function and return a REPL-like object which may be modified by plugins. The <code>context</code> object has the following attributes:</p>
+
+<table>
+<tr>
+<th>Attribute</th>
+<th>Description</th>
+<th align="right">Introduced</th>
+</tr>
+<tr>
+<td><code>nesh</code></td>
+<td>A reference to the Nesh module</td>
+<td align="right">1.0.0</td>
+</tr>
+</table><p>For example:</p>
 
 <div class="highlight"><pre><span class="nv">nesh = </span><span class="nx">require</span> <span class="s">'nesh'</span>
 <span class="nv">mylang = </span><span class="nx">require</span> <span class="s">'mylang'</span>
 
-<span class="nx">nesh</span><span class="p">.</span><span class="nx">loadLanguage</span> <span class="nf">(neshRef) -&gt;</span>
-    <span class="nv">neshRef.compile = </span><span class="nf">(data) -&gt;</span>
+<span class="nx">nesh</span><span class="p">.</span><span class="nx">loadLanguage</span> <span class="nf">(context) -&gt;</span>
+    <span class="nv">nesh.compile = </span><span class="nf">(data) -&gt;</span>
         <span class="c1"># Compile to js here</span>
         <span class="nx">mylang</span><span class="p">.</span><span class="nx">compile</span> <span class="nx">data</span><span class="p">,</span> <span class="p">{</span><span class="nv">bare: </span><span class="kc">true</span><span class="p">}</span>
-    <span class="nv">neshRef.repl =</span>
+    <span class="nv">nesh.repl =</span>
         <span class="nv">start: </span><span class="nf">(opts) -&gt;</span>
             <span class="c1"># Do stuff here!</span>
             <span class="nv">opts.eval = </span><span class="nx">mylang</span><span class="p">.</span><span class="nb">eval</span>
             <span class="nv">repl = </span><span class="nx">require</span><span class="p">(</span><span class="s">'repl'</span><span class="p">).</span><span class="nx">start</span> <span class="nx">opts</span>
+            <span class="c1"># Don't forget to return the REPL!</span>
             <span class="k">return</span> <span class="nx">repl</span>
-    <span class="nv">neshRef.defaults.welcome = </span><span class="s">'Welcome to my interpreter!'</span>
-    <span class="nv">neshRef.defaults.historyFile = </span><span class="nx">path</span><span class="p">.</span><span class="nx">join</span><span class="p">(</span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">HOME</span><span class="p">,</span> <span class="s">'.mylang_history'</span><span class="p">)</span>
+    <span class="nv">nesh.defaults.welcome = </span><span class="s">'Welcome to my interpreter!'</span>
+    <span class="nv">nesh.defaults.historyFile = </span><span class="nx">path</span><span class="p">.</span><span class="nx">join</span><span class="p">(</span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">HOME</span><span class="p">,</span> <span class="s">'.mylang_history'</span><span class="p">)</span>
 
 <span class="nx">nesh</span><span class="p">.</span><span class="nx">start</span> <span class="nf">(err) -&gt;</span>
-    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="nx">err</span> <span class="k">if</span> <span class="nx">err</span>
+    <span class="nx">nesh</span><span class="p">.</span><span class="nx">log</span><span class="p">.</span><span class="nx">error</span> <span class="nx">err</span> <span class="k">if</span> <span class="nx">err</span>
 </pre></div>
 
-<p>Plugins may define <code>setup</code>, <code>preStart</code>, and <code>postStart</code> functions that are called when the plugin is loaded, before a REPL is created, and after a REPL has been created respectively. Plugins are loaded via the <code>nesh.loadPlugin</code> function. A very simple example plugin written in CoffeeScript might look like this:</p>
+<p>Plugins should set a <code>name</code> and <code>description</code>. Plugins may also define <code>setup</code>, <code>preStart</code>, and <code>postStart</code> functions that are called when the plugin is loaded, before a REPL is created, and after a REPL has been created respectively. Plugins are loaded via the <code>nesh.loadPlugin</code> function. A very simple example plugin written in CoffeeScript might look like this:</p>
 
 <div class="highlight"><pre><span class="nv">nesh = </span><span class="nx">require</span> <span class="s">'nesh'</span>
 <span class="nv">util = </span><span class="nx">require</span> <span class="s">'util'</span>
 
 <span class="nv">myPlugin =</span>
-    <span class="nv">setup: </span><span class="nf">(defaults) -&gt;</span>
-        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="s">'Setting up my plugin! Defaults:'</span>
-        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="nx">util</span><span class="p">.</span><span class="nx">inspect</span> <span class="nx">defaults</span>
+    <span class="nv">name: </span><span class="s">"myplugin"</span>
+    <span class="nv">description: </span><span class="s">"Some description here"</span>
+    <span class="nv">setup: </span><span class="nf">(context) -&gt;</span>
+        <span class="p">{</span><span class="nx">defaults</span><span class="p">}</span> <span class="o">=</span> <span class="nx">context</span>
+        <span class="nx">nesh</span><span class="p">.</span><span class="nx">log</span><span class="p">.</span><span class="nx">info</span> <span class="s">'Setting up my plugin! Defaults:'</span>
+        <span class="nx">nesh</span><span class="p">.</span><span class="nx">log</span><span class="p">.</span><span class="nx">info</span> <span class="nx">util</span><span class="p">.</span><span class="nx">inspect</span> <span class="nx">defaults</span>
 
-    <span class="nv">preStart: </span><span class="nf">(opts) -&gt;</span>
-        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="s">'About to start the interpreter with these options:'</span>
-        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="nx">util</span><span class="p">.</span><span class="nx">inspect</span> <span class="nx">opts</span>
+    <span class="nv">preStart: </span><span class="nf">(context) -&gt;</span>
+        <span class="p">{</span><span class="nx">options</span><span class="p">}</span> <span class="o">=</span> <span class="nx">context</span>
+        <span class="nx">nesh</span><span class="p">.</span><span class="nx">log</span><span class="p">.</span><span class="nx">info</span> <span class="s">'About to start the interpreter with these options:'</span>
+        <span class="nx">nesh</span><span class="p">.</span><span class="nx">log</span><span class="p">.</span><span class="nx">info</span> <span class="nx">util</span><span class="p">.</span><span class="nx">inspect</span> <span class="nx">options</span>
 
-    <span class="nv">postStart: </span><span class="nf">(repl) -&gt;</span>
-        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="s">'Interpreter started! REPL:'</span>
-        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="nx">util</span><span class="p">.</span><span class="nx">inspect</span> <span class="nx">repl</span>
+    <span class="nv">postStart: </span><span class="nf">(context) -&gt;</span>
+        <span class="p">{</span><span class="nx">repl</span><span class="p">}</span> <span class="o">=</span> <span class="nx">context</span>
+        <span class="nx">nesh</span><span class="p">.</span><span class="nx">log</span><span class="p">.</span><span class="nx">info</span> <span class="s">'Interpreter started! REPL:'</span>
+        <span class="nx">nesh</span><span class="p">.</span><span class="nx">log</span><span class="p">.</span><span class="nx">info</span> <span class="nx">util</span><span class="p">.</span><span class="nx">inspect</span> <span class="nx">repl</span>
 
 <span class="nx">nesh</span><span class="p">.</span><span class="nx">loadPlugin</span> <span class="nx">myPlugin</span><span class="p">,</span> <span class="nf">(err) -&gt;</span>
-    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="nx">err</span> <span class="k">if</span> <span class="nx">err</span>
+    <span class="nx">nesh</span><span class="p">.</span><span class="nx">log</span><span class="p">.</span><span class="nx">error</span> <span class="nx">err</span> <span class="k">if</span> <span class="nx">err</span>
 
     <span class="nx">nesh</span><span class="p">.</span><span class="nx">start</span> <span class="nf">(err) -&gt;</span>
-        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="nx">err</span> <span class="k">if</span> <span class="nx">err</span>
+        <span class="nx">nesh</span><span class="p">.</span><span class="nx">log</span><span class="p">.</span><span class="nx">error</span> <span class="nx">err</span> <span class="k">if</span> <span class="nx">err</span>
 </pre></div>
 
 <p>Several plugins ship with Nesh, just take a look at the <code>src/plugins</code> directory. If these ever need to be removed then you can do so by accessing the <code>nesh.plugins</code> array. You can also prevent loading the default set of plugins by manually calling <code>nesh.init</code> with <code>autoload</code> set to <code>false</code>.</p>
@@ -358,7 +433,8 @@ nesh -c -e hello.js
 <p>Sometimes, a plugin may take actions that must run asyncronously. To support these cases, each of the plugin's functions can take a callback parameter <code>next</code> which must be called when finished. For example, if we were loading the welcome message's default value from a database with an asyncronous call:</p>
 
 <div class="highlight"><pre><span class="nv">myPlugin =</span>
-    <span class="nv">setup: </span><span class="nf">(defaults, next) -&gt;</span>
+    <span class="nv">setup: </span><span class="nf">(context, next) -&gt;</span>
+        <span class="p">{</span><span class="nx">defaults</span><span class="p">}</span> <span class="o">=</span> <span class="nx">context</span><span class="p">.</span><span class="nx">nesh</span>
         <span class="nx">mongodb</span><span class="p">.</span><span class="nx">findOne</span> <span class="nv">name: </span><span class="s">'defaultWelcome'</span><span class="p">,</span> <span class="nf">(err, item) -&gt;</span>
             <span class="k">return</span> <span class="nx">next</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="k">if</span> <span class="nx">err</span>
 
@@ -386,23 +462,73 @@ nesh -c -e hello.js
 </li>
 </ul><h3>Plugin Reference</h3>
 
-<h4>Plugin.setup (defaults, [next])</h4>
+<h4>Plugin.setup (context, [next])</h4>
 
-<p>Called when the plugin is first loaded. The <code>defaults</code> passed in are an object containing default values that will be used to initialize the interpreter when <code>nesh.start</code> is called. If <code>next</code> is defined, then the function is treated as asyncronous and <code>next</code> will be passed a function that must be called when finished. If an error occurs, then the error should be passed to <code>next</code>.</p>
+<p>Called when the plugin is first loaded. If <code>next</code> is defined, then the function is treated as asyncronous and <code>next</code> will be passed a function that must be called when finished. If an error occurs, then the error should be passed to <code>next</code>. The <code>context</code> passed in is an object containing the values defined below:</p>
 
-<p>This is a good place to add or modify default values.</p>
+<table>
+<tr>
+<th>Attribute</th>
+<th>Description</th>
+<th align="right">Introduced</th>
+</tr>
+<tr>
+<td><code>nesh</code></td>
+<td>A reference to the Nesh module</td>
+<td align="right">1.0.0</td>
+</tr>
+</table><p>This is a good place to add or modify default values via <code>context.nesh.defaults</code>.</p>
 
-<h4>Plugin.preStart (opts, [next])</h4>
+<h4>Plugin.preStart (context, [next])</h4>
 
-<p>Called when <code>nesh.start</code> has been called but before the REPL is created and started. The <code>opts</code> passed in are a merged object made from the Nesh defaults and any options passed to <code>nesh.start</code>. If <code>next</code> is defined, then the function is treated as asyncronous and <code>next</code> will be passed a function that must be called when finished. If an error occurs, then the error should be passed to <code>next</code>.</p>
+<p>Called when <code>nesh.start</code> has been called but before the REPL is created and started. If <code>next</code> is defined, then the function is treated as asyncronous and <code>next</code> will be passed a function that must be called when finished. If an error occurs, then the error should be passed to <code>next</code>. The <code>context</code> passed in is an object containing the values defined below:</p>
 
-<p>This is a good place to print out information or modify the passed in options before they are sent to the REPL.</p>
+<table>
+<tr>
+<th>Attribute</th>
+<th>Description</th>
+<th align="right">Introduced</th>
+</tr>
+<tr>
+<td><code>nesh</code></td>
+<td>A reference to the Nesh module</td>
+<td align="right">1.0.0</td>
+</tr>
+<tr>
+<td><code>options</code></td>
+<td>The options passed to <code>nesh.start</code>
+</td>
+<td align="right">1.0.0</td>
+</tr>
+</table><p>This is a good place to print out information or modify the passed in options before they are sent to the REPL, e.g. <code>context.options.welcome = 'foo'</code>.</p>
 
-<h4>Plugin.postStart (repl, [next])</h4>
+<h4>Plugin.postStart (context, [next])</h4>
 
 <p>Called when <code>nesh.start</code> has been called and the REPL is started. The <code>repl</code> passed in is the newly created and started REPL from the <code>nesh.start</code> call and includes the <code>opts</code> from above as <code>repl.opts</code>. If <code>next</code> is defined, then the function is treated as asyncronous and <code>next</code> will be passed a function that must be called when finished. If an error occurs, then the error should be passed to <code>next</code>.</p>
 
-<p>This is a good place to modify the REPL, e.g. adding new commands, modifying history, listening for specific key strokes, etc.</p>
+<table>
+<tr>
+<th>Attribute</th>
+<th>Description</th>
+<th align="right">Introduced</th>
+</tr>
+<tr>
+<td><code>nesh</code></td>
+<td>A reference to the Nesh module</td>
+<td align="right">1.0.0</td>
+</tr>
+<tr>
+<td><code>options</code></td>
+<td>The options passed to <code>nesh.start</code>
+</td>
+<td align="right">1.0.0</td>
+</tr>
+<tr>
+<td><code>repl</code></td>
+<td>The created REPL instance</td>
+<td align="right">1.0.0</td>
+</tr>
+</table><p>This is a good place to modify the REPL, e.g. adding new commands, modifying history, listening for specific key strokes, etc.</p>
 
 <h2>Development</h2>
 
@@ -435,6 +561,20 @@ nesh -c -e hello.js
 <p>The unit test suite can be run via the following:</p>
 
 <div class="highlight"><pre>cake <span class="nb">test</span>
+</pre></div>
+
+<h3>Testing new plugins</h3>
+
+<p>You can test out new plugins that have their own NPM package by linking them into the plugins directory:</p>
+
+<div class="highlight"><pre>ln -s ~/Projects/nesh-myplugin ~/.nesh_modules/node_modules/
+</pre></div>
+
+<p>Then modify your <code>~/.nesh_config.json</code> file to enable the plugin. A minimal configuration looks like the following:</p>
+
+<div class="highlight"><pre><span class="p">{</span>
+    <span class="nx">plugins</span><span class="o">:</span> <span class="p">[</span><span class="s2">"nesh-myplugin"</span><span class="p">]</span>
+<span class="p">}</span>
 </pre></div>
 
 <h2>License</h2>
