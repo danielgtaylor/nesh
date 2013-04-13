@@ -36,9 +36,12 @@
 
 <ul>
 <li>Lightweight &amp; fast</li>
+<li>Tab completion</li>
+<li>Persistent history</li>
+<li>Preloading code within the interpreter</li>
 <li>Built-in convenience functions</li>
 <li>Easily extensible interactive environment</li>
-<li>Simple to embed in your application</li>
+<li>Simple to embed in your own applications</li>
 <li>Asyncronous plugin architecture</li>
 <li>Multi-language support (e.g. CoffeeScript)</li>
 <li>Per-user plugin management</li>
@@ -58,7 +61,7 @@ npm install -g coffee-script
 nesh -c
 </pre></div>
 
-<p>If you wish to use <code>nesh</code> within your own project with <code>require 'nesh'</code> (i.e. to embed within your app) you can use the following non-global install instead:</p>
+<p>If you wish to use <code>nesh</code> within your own project with <code>require 'nesh'</code> (i.e. to embed within your app) you can use the following non-global install instead. See Embedding the Interpreter below for more information.</p>
 
 <div class="highlight"><pre>npm install nesh
 </pre></div>
@@ -76,7 +79,7 @@ nesh -c
 
 <h3>Setting a Language</h3>
 
-<p>Nesh supports multiple languages, and ships with CoffeeScript support out of the box. To select a language:</p>
+<p>Nesh supports multiple languages, and ships with CoffeeScript support out of the box. Note that to use a particular language, however, you need to first install it (e.g. <code>npm install -g coffee-script</code>). To select a language:</p>
 
 <div class="highlight"><pre>nesh --language coffee
 </pre></div>
@@ -94,7 +97,7 @@ nesh -c
 
 <h3>Preloading Code</h3>
 
-<p>You can preload a script with the <code>--eval</code> option, which will evaluate either a file or string in the context of the interpreter, so anything you define will be available in the interpreter after startup. This is similar to using <code>ipython -i script.py</code>.</p>
+<p>You can preload a script with the <code>--eval</code> option, which will evaluate either a file or string in the context of the interpreter, so anything that you define will be available in the interpreter after startup. This is similar to using <code>ipython -i script.py</code>.</p>
 
 <div class="highlight"><pre><span class="nb">echo</span> <span class="s1">'var hello = function (name) { return "Hello, " + name; }'</span> &gt;hello.js
 nesh --eval hello.js
@@ -116,7 +119,11 @@ nesh -c -e hello.js
 
 <h2>Plugins</h2>
 
-<p>Plugins can add functionality to Nesh. Plugins are published via NPM just like any other Node.js package. Plugins published via NPM should use <code>nesh-</code> as the naming prefix, which makes them easier to find. You can install and enable new plugins easily:</p>
+<p>Plugins can add functionality to Nesh. Plugins are published via NPM just like any other Node.js package. Plugins published via NPM should use <code>nesh-</code> as the naming prefix, which makes them easier to find. </p>
+
+<ul>
+<li><a href="https://npmjs.org/browse/keyword/nesh">Published plugins</a></li>
+</ul><p>You can install and enable new plugins easily:</p>
 
 <div class="highlight"><pre><span class="c"># Install and enable a plugin called nesh-hello</span>
 nesh --enable nesh-hello
@@ -270,6 +277,10 @@ nesh --disable welcome
 
 <p>The path to the default configuration file location.</p>
 
+<h4>nesh.config.reset ()</h4>
+
+<p>Reset the config to a blank state, i.e. <code>{}</code>.</p>
+
 <h4>nesh.config.load ([path])</h4>
 
 <p>Loads a configuration file. Once loaded, the config may be accessed via <code>nesh.config.get()</code>. Note: this may throw errors if parsing the file fails.</p>
@@ -351,6 +362,10 @@ nesh --disable welcome
 <h4>nesh.log.error (message)</h4>
 
 <p>Log an error message.</p>
+
+<h4>nesh.log.test ()</h4>
+
+<p>Reconfigure the logging to store sent messages in <code>nesh.log.output</code> and disable console colors. This makes testing log output much simpler.</p>
 
 <h4>nesh.log.winston ()</h4>
 
