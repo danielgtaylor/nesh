@@ -1,5 +1,7 @@
 assert = require 'assert'
+fs = require 'fs'
 nesh = null
+path = require 'path'
 
 describe 'nesh', ->
     it 'should import without error', ->
@@ -202,6 +204,58 @@ describe 'plugins', ->
                 assert.ok called
                 assert.equal true, err?
                 done()
+
+describe 'config', ->
+    it 'should load a valid config file', ->
+        filename = path.resolve '.test-config.json'
+        fs.writeFileSync filename, '{"plugins": ["test"]}'
+        nesh.config.load filename
+        fs.unlinkSync filename
+        config = nesh.config.get()
+        assert.ok config.plugins
+        assert.equal 'test', config.plugins[0]
+
+    it 'should throw on invalid input', ->
+        filename = path.resolve '.test-broken-config.json'
+        fs.writeFileSync filename, '{plugins ["test"]}'
+        assert.throws ->
+            nesh.config.load filename
+        fs.unlinkSync filename
+
+    it 'should save a valid config', ->
+        filename = path.resolve '.test-write-config.json'
+        nesh.config.reset()
+        config = nesh.config.get()
+        config.test = 'test'
+        nesh.config.save filename
+        data = fs.readFileSync filename, 'utf-8'
+        fs.unlinkSync filename
+        assert.equal '{"test":"test"}', data
+
+describe 'log', ->
+    before ->
+        # Setup logging for testing
+        nesh.log.test()
+
+    it 'should log messages via debug', ->
+        nesh.log.debug 'Just a test'
+        assert.equal 'Just a test', nesh.log.output
+        nesh.log.output = ''
+
+    it 'should log messages via info', ->
+        nesh.log.info 'Just a test'
+        assert.equal 'Just a test', nesh.log.output
+        nesh.log.output = ''
+
+    it 'should log messages via warn', ->
+        nesh.log.warn 'Just a test'
+        assert.equal 'Just a test', nesh.log.output
+        nesh.log.output = ''
+
+    it 'should log messages via error', ->
+        nesh.log.error 'Just a test'
+        assert.equal 'Just a test', nesh.log.output
+        nesh.log.output = ''
 
 describe 'eval', ->
     it 'should eval in the REPL context', (done) ->

@@ -42,7 +42,7 @@ module.exports = logger =
         logger.log logger.INFO, msg
 
     warn: (msg) ->
-        logger.log logger.WARNING, if logger.colors then msg.yellow else msg
+        logger.log logger.WARN, if logger.colors then msg.yellow else msg
 
     error: (msg) ->
         logger.log logger.ERROR, if logger.colors then msg.red else msg
@@ -50,6 +50,15 @@ module.exports = logger =
     ###
     Convenience methods for logging frameworks
     ###
+
+    # Instant setup for testing. Disables colors, saves output to
+    # logger.output, sets level to DEBUG and adheres to level setting.
+    test: ->
+        logger.colors = false
+        logger.output = ''
+        logger.level = logger.DEBUG
+        logger.log = (level, message) ->
+            logger.output += message if level <= logger.level
 
     # Instant setup for Winston - https://npmjs.org/package/winston
     winston: ->
