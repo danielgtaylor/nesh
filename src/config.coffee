@@ -15,6 +15,10 @@ config = exports
 # The default path to the configuration file
 config.path = path.join process.env.HOME, '.nesh_config.json'
 
+# Reset to a blank configuration
+config.reset = ->
+    _config = {}
+
 # Load a configuration file. This should be called once before
 # loading plugins so that plugins have access to the config.
 # Calling it again will reload the configuration.
