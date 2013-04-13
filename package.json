@@ -1,6 +1,6 @@
 {
   "name": "nesh",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "An enhanced, extensible shell for Node.js",
   "homepage": "http://danielgtaylor.github.io/nesh/",
   "main": "lib/nesh.js",
