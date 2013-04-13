@@ -3,9 +3,12 @@ Node Enhanced Shell
 An enhanced extensible interactive interpreter (REPL) for Node.js and languages that compile to Javascript, like CoffeeScript. Some features:
 
  * Lightweight & fast
+ * Tab completion
+ * Persistent history
+ * Preloading code within the interpreter
  * Built-in convenience functions
  * Easily extensible interactive environment
- * Simple to embed in your application
+ * Simple to embed in your own applications
  * Asyncronous plugin architecture
  * Multi-language support (e.g. CoffeeScript)
  * Per-user plugin management
@@ -27,7 +30,7 @@ npm install -g coffee-script
 nesh -c
 ```
 
-If you wish to use `nesh` within your own project with `require 'nesh'` (i.e. to embed within your app) you can use the following non-global install instead:
+If you wish to use `nesh` within your own project with `require 'nesh'` (i.e. to embed within your app) you can use the following non-global install instead. See Embedding the Interpreter below for more information.
 
 ```bash
 npm install nesh
@@ -45,7 +48,7 @@ nesh --help
 ```
 
 ### Setting a Language
-Nesh supports multiple languages, and ships with CoffeeScript support out of the box. To select a language:
+Nesh supports multiple languages, and ships with CoffeeScript support out of the box. Note that to use a particular language, however, you need to first install it (e.g. `npm install -g coffee-script`). To select a language:
 
 ```bash
 nesh --language coffee
@@ -63,7 +66,7 @@ As a shortcut for CoffeeScript, you can use `nesh -c`. It's also pretty easy to 
 A prompt can be set with the `--prompt` parameter, e.g. `nesh --prompt "test> "`. The welcome message can be set the same way with the `--welcome` parameter. You can disable the welcome message via e.g. `nesh --no-welcome`.
 
 ### Preloading Code
-You can preload a script with the `--eval` option, which will evaluate either a file or string in the context of the interpreter, so anything you define will be available in the interpreter after startup. This is similar to using `ipython -i script.py`.
+You can preload a script with the `--eval` option, which will evaluate either a file or string in the context of the interpreter, so anything that you define will be available in the interpreter after startup. This is similar to using `ipython -i script.py`.
 
 ```bash
 echo 'var hello = function (name) { return "Hello, " + name; }' >hello.js
@@ -88,7 +91,11 @@ nesh -c -e hello.js
 
 Plugins
 -------
-Plugins can add functionality to Nesh. Plugins are published via NPM just like any other Node.js package. Plugins published via NPM should use `nesh-` as the naming prefix, which makes them easier to find. You can install and enable new plugins easily:
+Plugins can add functionality to Nesh. Plugins are published via NPM just like any other Node.js package. Plugins published via NPM should use `nesh-` as the naming prefix, which makes them easier to find. 
+
+ * [Published plugins](https://npmjs.org/browse/keyword/nesh)
+
+You can install and enable new plugins easily:
 
 ```bash
 # Install and enable a plugin called nesh-hello
@@ -222,6 +229,9 @@ Nesh provides a basic configuration system that by default stores data in `~/.ne
 #### nesh.config.path
 The path to the default configuration file location.
 
+#### nesh.config.reset ()
+Reset the config to a blank state, i.e. `{}`.
+
 #### nesh.config.load ([path])
 Loads a configuration file. Once loaded, the config may be accessed via `nesh.config.get()`. Note: this may throw errors if parsing the file fails.
 
@@ -291,6 +301,9 @@ Log a warning message.
 
 #### nesh.log.error (message)
 Log an error message.
+
+#### nesh.log.test ()
+Reconfigure the logging to store sent messages in `nesh.log.output` and disable console colors. This makes testing log output much simpler.
 
 #### nesh.log.winston ()
 Reconfigure the logging to use Winston to output messages.
