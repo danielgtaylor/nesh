@@ -47,7 +47,7 @@ nesh --help
 ```
 
 ### Setting a Language
-Nesh supports multiple languages, and ships with CoffeeScript support out of the box. Note that to use a particular language, however, you need to first install it (e.g. `npm install -g coffee-script`). To select a language:
+Nesh supports multiple languages, and ships with CoffeeScript support out of the box. To select a language:
 
 ```bash
 nesh --language coffee
