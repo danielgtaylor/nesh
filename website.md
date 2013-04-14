@@ -26,7 +26,6 @@ npm install -g nesh
 nesh
 
 # Run nesh with CoffeeScript
-npm install -g coffee-script
 nesh -c
 ```
 
