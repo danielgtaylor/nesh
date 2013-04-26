@@ -4,6 +4,7 @@ Builtin Utilities Plugin
 
 _ = require 'underscore'
 crypto = require 'crypto'
+querystring = require 'querystring'
 
 exports.name = 'builtins'
 exports.description = 'Exposes built-in convenience methods'
@@ -59,6 +60,16 @@ exports.postStart = (context) ->
     # Generate a random lowercase hexadecimal string
     repl.context.randHex = (length) ->
         repl.context.randString length, 'abcdef0123456789'
+
+    ###
+    URL encoding / decoding
+    ###
+    # Expose the querystring module
+    repl.context.querystring = querystring
+    # Shortcut to encode URL components
+    repl.context.urlenc = querystring.escape
+    # Shortcut to decode URL components
+    repl.context.urldec = querystring.unescape
 
     ###
     REPL Commands
