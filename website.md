@@ -153,6 +153,14 @@ Return a random string with characters selected from `charSet`, which defaults t
 #### randHex (length)
 Return a random lowercase hexadecimal string.
 
+### URL Encoding
+
+#### urlenc (value)
+Return a URL-encoded version of a string. For example, `a+1/%` would become `a%2B1%2F%25`.
+
+#### urldec (value)
+Return a URL-decoded version of a string. For example, `a%2B1%2F%25` would become `a+1/%`.
+
 Embedding the Interpreter
 -------------------------
 The Nesh interpreter can be embedded into your application, whether it is written in Javascript, Coffeescript, or another language that runs on Node. For example, to start an interactive CoffeeScript session on stdin/stdout from Javascript with a custom prompt and welcome message:
