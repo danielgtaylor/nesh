@@ -186,6 +186,16 @@ nesh --disable welcome
 
 <p>Return a random lowercase hexadecimal string.</p>
 
+<h3>URL Encoding</h3>
+
+<h4>urlenc (value)</h4>
+
+<p>Return a URL-encoded version of a string. For example, <code>a+1/%</code> would become <code>a%2B1%2F%25</code>.</p>
+
+<h4>urldec (value)</h4>
+
+<p>Return a URL-decoded version of a string. For example, <code>a%2B1%2F%25</code> would become <code>a+1/%</code>.</p>
+
 <h2>Embedding the Interpreter</h2>
 
 <p>The Nesh interpreter can be embedded into your application, whether it is written in Javascript, Coffeescript, or another language that runs on Node. For example, to start an interactive CoffeeScript session on stdin/stdout from Javascript with a custom prompt and welcome message:</p>
