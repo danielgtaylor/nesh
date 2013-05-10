@@ -61,8 +61,7 @@ exports.postStart = (context) ->
             fs.write fd, "#{code}\n"
             lastLine = code
 
-    process.on 'exit', ->
-        fs.closeSync fd
+    repl.rli.on 'exit', -> fs.close fd
 
     # Add a command to show the history stack
     repl.commands['.history'] =
