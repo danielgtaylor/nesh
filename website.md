@@ -153,6 +153,17 @@ Return a random string with characters selected from `charSet`, which defaults t
 #### randHex (length)
 Return a random lowercase hexadecimal string.
 
+### Number Encoding
+
+#### bin (value)
+Convert a number into a binary string. For example, `bin(22)` would return `'10110'`.
+
+#### oct (value)
+Convert a number into an octal string. For example, `oct(22)` would return `'26'`.
+
+#### hex (value)
+Convert a number into a hexadecimal string. For example, `hex(22)` would return `'16'`.
+
 ### URL Encoding
 
 #### urlenc (value)

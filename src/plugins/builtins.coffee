@@ -62,6 +62,13 @@ exports.postStart = (context) ->
         repl.context.randString length, 'abcdef0123456789'
 
     ###
+    Number representation shortcuts
+    ###
+    repl.context.bin = (val) -> val.toString 2
+    repl.context.oct = (val) -> val.toString 8
+    repl.context.hex = (val) -> val.toString 16
+
+    ###
     URL encoding / decoding
     ###
     # Expose the querystring module
