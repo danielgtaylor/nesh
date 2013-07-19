@@ -6,7 +6,6 @@ will print out version information for nesh, any loaded languages,
 and Node itself. The new command is listed with a description when
 you run `.help`.
 ###
-coffee = require 'coffee-script'
 nesh = require '../nesh'
 
 exports.name = 'version'
