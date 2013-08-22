@@ -77,6 +77,7 @@ nesh.version = neshInfo.version
 
 # An object used to populate default values for the repl
 nesh.defaults =
+    useGlobal: yes  # Using the global context allows packages such as 'colors' to modify built-in prototypes.
     prompt: 'nesh> '
 
 # Languages
