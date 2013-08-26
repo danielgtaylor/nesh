@@ -13,4 +13,7 @@ exports.postStart = (context) ->
     {repl} = context
     if repl.opts.evalData
         log.debug 'Evaluating code in the REPL'
-        vm.runInContext repl.opts.evalData, repl.context
+        if global is repl.context
+        	vm.runInThisContext repl.opts.evalData
+        else
+        	vm.runInContext repl.opts.evalData, repl.context
