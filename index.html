@@ -30,7 +30,8 @@
 
       </header>
       <section>
-        <h1>Node Enhanced Shell</h1>
+        <h1>
+<a name="node-enhanced-shell" class="anchor" href="#node-enhanced-shell"><span class="octicon octicon-link"></span></a>Node Enhanced Shell</h1>
 
 <p>An enhanced extensible interactive interpreter (REPL) for Node.js and languages that compile to Javascript, like CoffeeScript. Some features:</p>
 
@@ -47,11 +48,12 @@
 <li>Per-user plugin management</li>
 </ul><p><a href="https://gemnasium.com/danielgtaylor/nesh"><img src="https://gemnasium.com/danielgtaylor/nesh.png" alt="Dependency Status"></a> <a href="https://travis-ci.org/danielgtaylor/nesh"><img src="https://travis-ci.org/danielgtaylor/nesh.png?branch=master" alt="Build Status"></a></p>
 
-<h2>Installation</h2>
+<h2>
+<a name="installation" class="anchor" href="#installation"><span class="octicon octicon-link"></span></a>Installation</h2>
 
 <p>You can install and start using <code>nesh</code> with <code>npm</code> (note: you may need to use <code>sudo</code> to install globally):</p>
 
-<div class="highlight"><pre>npm install -g nesh
+<div class="highlight highlight-bash"><pre>npm install -g nesh
 
 <span class="c"># Run nesh</span>
 nesh
@@ -62,61 +64,67 @@ nesh -c
 
 <p>If you wish to use <code>nesh</code> within your own project with <code>require 'nesh'</code> (i.e. to embed within your app) you can use the following non-global install instead. See Embedding the Interpreter below for more information.</p>
 
-<div class="highlight"><pre>npm install nesh
+<div class="highlight highlight-bash"><pre>npm install nesh
 </pre></div>
 
-<h2>Basic Usage</h2>
+<h2>
+<a name="basic-usage" class="anchor" href="#basic-usage"><span class="octicon octicon-link"></span></a>Basic Usage</h2>
 
 <p>The <code>nesh</code> command starts an interactive interpreter with a default set of plugins loaded. You can type commands and they will be executed, with the output or any errors displayed below the command.</p>
 
-<h3>Command Help</h3>
+<h3>
+<a name="command-help" class="anchor" href="#command-help"><span class="octicon octicon-link"></span></a>Command Help</h3>
 
 <p>You can get a list of options and help via:</p>
 
-<div class="highlight"><pre>nesh --help
+<div class="highlight highlight-bash"><pre>nesh --help
 </pre></div>
 
-<h3>Setting a Language</h3>
+<h3>
+<a name="setting-a-language" class="anchor" href="#setting-a-language"><span class="octicon octicon-link"></span></a>Setting a Language</h3>
 
 <p>Nesh supports multiple languages, and ships with CoffeeScript support out of the box. To select a language:</p>
 
-<div class="highlight"><pre>nesh --language coffee
+<div class="highlight highlight-bash"><pre>nesh --language coffee
 </pre></div>
 
 <p>You can get a list of supported built-in languages via:</p>
 
-<div class="highlight"><pre>nesh --list-languages
+<div class="highlight highlight-bash"><pre>nesh --list-languages
 </pre></div>
 
 <p>As a shortcut for CoffeeScript, you can use <code>nesh -c</code>. It's also pretty easy to set up an alias for this, e.g. <code>alias cs='nesh -c'</code> in bash.</p>
 
-<h3>Setting a Prompt &amp; Welcome Message</h3>
+<h3>
+<a name="setting-a-prompt--welcome-message" class="anchor" href="#setting-a-prompt--welcome-message"><span class="octicon octicon-link"></span></a>Setting a Prompt &amp; Welcome Message</h3>
 
 <p>A prompt can be set with the <code>--prompt</code> parameter, e.g. <code>nesh --prompt "test&gt; "</code>. The welcome message can be set the same way with the <code>--welcome</code> parameter. You can disable the welcome message via e.g. <code>nesh --no-welcome</code>.</p>
 
-<h3>Preloading Code</h3>
+<h3>
+<a name="preloading-code" class="anchor" href="#preloading-code"><span class="octicon octicon-link"></span></a>Preloading Code</h3>
 
 <p>You can preload a script with the <code>--eval</code> option, which will evaluate either a file or string in the context of the interpreter, so anything that you define will be available in the interpreter after startup. This is similar to using <code>ipython -i script.py</code>.</p>
 
-<div class="highlight"><pre><span class="nb">echo</span> <span class="s1">'var hello = function (name) { return "Hello, " + name; }'</span> &gt;hello.js
+<div class="highlight highlight-bash"><pre><span class="nb">echo</span> <span class="s1">'var hello = function (name) { return "Hello, " + name; }'</span> &gt;hello.js
 nesh --eval hello.js
 </pre></div>
 
 <p>Now you can run <code>hello('world');</code> in the interpreter. A string can also be used:</p>
 
-<div class="highlight"><pre>nesh --eval <span class="s2">"var test = 1;"</span>
+<div class="highlight highlight-bash"><pre>nesh --eval <span class="s2">"var test = 1;"</span>
 </pre></div>
 
 <p>Languages other than Javascript can also be used. When using a non-Javascript language, the code loaded will use that language's compile function before running if the loaded filename does not end in <code>.js</code>. This means it is possible to load code both in the loaded language and in plain javascript. For example:</p>
 
-<div class="highlight"><pre><span class="c"># Load code from a language-specific file</span>
+<div class="highlight highlight-bash"><pre><span class="c"># Load code from a language-specific file</span>
 nesh -c -e hello.coffee
 
 <span class="c"># Load code from a plain javascript file</span>
 nesh -c -e hello.js
 </pre></div>
 
-<h2>Plugins</h2>
+<h2>
+<a name="plugins" class="anchor" href="#plugins"><span class="octicon octicon-link"></span></a>Plugins</h2>
 
 <p>Plugins can add functionality to Nesh. Plugins are published via NPM just like any other Node.js package. Plugins published via NPM should use <code>nesh-</code> as the naming prefix, which makes them easier to find. </p>
 
@@ -124,7 +132,7 @@ nesh -c -e hello.js
 <li><a href="https://npmjs.org/browse/keyword/nesh">Published plugins</a></li>
 </ul><p>You can install and enable new plugins easily:</p>
 
-<div class="highlight"><pre><span class="c"># Install and enable a plugin called nesh-hello</span>
+<div class="highlight highlight-bash"><pre><span class="c"># Install and enable a plugin called nesh-hello</span>
 nesh --enable nesh-hello
 
 <span class="c"># Remove and disable a plugin called nesh-hello</span>
@@ -133,88 +141,108 @@ nesh --disable nesh-hello
 
 <p>It's also possible to blacklist built-in plugins from loading on startup:</p>
 
-<div class="highlight"><pre><span class="c"># Prevent welcome message from ever showing</span>
+<div class="highlight highlight-bash"><pre><span class="c"># Prevent welcome message from ever showing</span>
 nesh --disable welcome
 </pre></div>
 
 <p>You can see a list of loaded plugins via the <code>--plugins</code> option:</p>
 
-<div class="highlight"><pre>nesh --plugins
+<div class="highlight highlight-bash"><pre>nesh --plugins
 </pre></div>
 
 <p>See the section below on Extending the Interpreter for information on how to write plugins.</p>
 
-<h2>Convenience Functions</h2>
+<h2>
+<a name="convenience-functions" class="anchor" href="#convenience-functions"><span class="octicon octicon-link"></span></a>Convenience Functions</h2>
 
 <p>When run from the <code>nesh</code> command several built-in convenience functions are available.</p>
 
-<h3>Modules</h3>
+<h3>
+<a name="modules" class="anchor" href="#modules"><span class="octicon octicon-link"></span></a>Modules</h3>
 
-<h4>__</h4>
+<h4>
+<a name="__" class="anchor" href="#__"><span class="octicon octicon-link"></span></a>__</h4>
 
 <p>Exposes the Underscore.js library. Two underscores are used because a single underscore is reserved for the response of the last run command.</p>
 
-<h3>Hashing</h3>
+<h3>
+<a name="hashing" class="anchor" href="#hashing"><span class="octicon octicon-link"></span></a>Hashing</h3>
 
-<h4>md5 (value)</h4>
+<h4>
+<a name="md5-value" class="anchor" href="#md5-value"><span class="octicon octicon-link"></span></a>md5 (value)</h4>
 
 <p>Return an MD5 hash of a value as a hexadecimal string.</p>
 
-<h4>sha (value)</h4>
+<h4>
+<a name="sha-value" class="anchor" href="#sha-value"><span class="octicon octicon-link"></span></a>sha (value)</h4>
 
 <p>Return a SHA1 hash of a value as a hexadecimal string.</p>
 
-<h3>Random</h3>
+<h3>
+<a name="random" class="anchor" href="#random"><span class="octicon octicon-link"></span></a>Random</h3>
 
-<h4>rand ([start], [end])</h4>
+<h4>
+<a name="rand-start-end" class="anchor" href="#rand-start-end"><span class="octicon octicon-link"></span></a>rand ([start], [end])</h4>
 
 <p>Generate a random number. If neither <code>start</code> nor <code>end</code> are given, it returns a number between 0 and 1. If only <code>start</code> is given, a number between 0 and <code>start</code> is returned. Otherwise, a number between <code>start</code> and <code>end</code> is returned.</p>
 
-<h4>randInt ([start], [end])</h4>
+<h4>
+<a name="randint-start-end" class="anchor" href="#randint-start-end"><span class="octicon octicon-link"></span></a>randInt ([start], [end])</h4>
 
 <p>Generate a random integer. This is a shortcut for <code>Math.round(rand(start, end))</code> and follows the same rules as <code>rand</code> for <code>start</code> and <code>end</code>.</p>
 
-<h4>randChoices (choices, [length])</h4>
+<h4>
+<a name="randchoices-choices-length" class="anchor" href="#randchoices-choices-length"><span class="octicon octicon-link"></span></a>randChoices (choices, [length])</h4>
 
 <p>Select an array of random choices of length <code>length</code> from an array <code>choices</code>.</p>
 
-<h4>randString (length, [charSet])</h4>
+<h4>
+<a name="randstring-length-charset" class="anchor" href="#randstring-length-charset"><span class="octicon octicon-link"></span></a>randString (length, [charSet])</h4>
 
 <p>Return a random string with characters selected from <code>charSet</code>, which defaults to case-sensitive alphanumeric characters.</p>
 
-<h4>randHex (length)</h4>
+<h4>
+<a name="randhex-length" class="anchor" href="#randhex-length"><span class="octicon octicon-link"></span></a>randHex (length)</h4>
 
 <p>Return a random lowercase hexadecimal string.</p>
 
-<h3>Number Encoding</h3>
+<h3>
+<a name="number-encoding" class="anchor" href="#number-encoding"><span class="octicon octicon-link"></span></a>Number Encoding</h3>
 
-<h4>bin (value)</h4>
+<h4>
+<a name="bin-value" class="anchor" href="#bin-value"><span class="octicon octicon-link"></span></a>bin (value)</h4>
 
 <p>Convert a number into a binary string. For example, <code>bin(22)</code> would return <code>'10110'</code>.</p>
 
-<h4>oct (value)</h4>
+<h4>
+<a name="oct-value" class="anchor" href="#oct-value"><span class="octicon octicon-link"></span></a>oct (value)</h4>
 
 <p>Convert a number into an octal string. For example, <code>oct(22)</code> would return <code>'26'</code>.</p>
 
-<h4>hex (value)</h4>
+<h4>
+<a name="hex-value" class="anchor" href="#hex-value"><span class="octicon octicon-link"></span></a>hex (value)</h4>
 
 <p>Convert a number into a hexadecimal string. For example, <code>hex(22)</code> would return <code>'16'</code>.</p>
 
-<h3>URL Encoding</h3>
+<h3>
+<a name="url-encoding" class="anchor" href="#url-encoding"><span class="octicon octicon-link"></span></a>URL Encoding</h3>
 
-<h4>urlenc (value)</h4>
+<h4>
+<a name="urlenc-value" class="anchor" href="#urlenc-value"><span class="octicon octicon-link"></span></a>urlenc (value)</h4>
 
 <p>Return a URL-encoded version of a string. For example, <code>a+1/%</code> would become <code>a%2B1%2F%25</code>.</p>
 
-<h4>urldec (value)</h4>
+<h4>
+<a name="urldec-value" class="anchor" href="#urldec-value"><span class="octicon octicon-link"></span></a>urldec (value)</h4>
 
 <p>Return a URL-decoded version of a string. For example, <code>a%2B1%2F%25</code> would become <code>a+1/%</code>.</p>
 
-<h2>Embedding the Interpreter</h2>
+<h2>
+<a name="embedding-the-interpreter" class="anchor" href="#embedding-the-interpreter"><span class="octicon octicon-link"></span></a>Embedding the Interpreter</h2>
 
 <p>The Nesh interpreter can be embedded into your application, whether it is written in Javascript, Coffeescript, or another language that runs on Node. For example, to start an interactive CoffeeScript session on stdin/stdout from Javascript with a custom prompt and welcome message:</p>
 
-<div class="highlight"><pre><span class="nx">nesh</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'nesh'</span><span class="p">);</span>
+<div class="highlight highlight-javascript"><pre><span class="nx">nesh</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'nesh'</span><span class="p">);</span>
 
 <span class="nx">opts</span> <span class="o">=</span> <span class="p">{</span>
     <span class="nx">welcome</span><span class="o">:</span> <span class="s1">'Welcome!'</span><span class="p">,</span>
@@ -235,49 +263,61 @@ nesh --disable welcome
 <span class="p">});</span>
 </pre></div>
 
-<h3>Embedding Reference</h3>
+<h3>
+<a name="embedding-reference" class="anchor" href="#embedding-reference"><span class="octicon octicon-link"></span></a>Embedding Reference</h3>
 
-<h4>nesh.version</h4>
+<h4>
+<a name="neshversion" class="anchor" href="#neshversion"><span class="octicon octicon-link"></span></a>nesh.version</h4>
 
 <p>The Nesh version.</p>
 
-<h4>nesh.config</h4>
+<h4>
+<a name="neshconfig" class="anchor" href="#neshconfig"><span class="octicon octicon-link"></span></a>nesh.config</h4>
 
 <p>The configuration module. See below in the Configuration section for more information.</p>
 
-<h4>nesh.defaults</h4>
+<h4>
+<a name="neshdefaults" class="anchor" href="#neshdefaults"><span class="octicon octicon-link"></span></a>nesh.defaults</h4>
 
 <p>An object containing default values that are set when no such value is passed to <code>nesh.start</code>'s <code>opts</code> parameter.</p>
 
-<h4>nesh.compile</h4>
+<h4>
+<a name="neshcompile" class="anchor" href="#neshcompile"><span class="octicon octicon-link"></span></a>nesh.compile</h4>
 
 <p>A function to compile a snippet of code into javascript.</p>
 
-<h4>nesh.repl</h4>
+<h4>
+<a name="neshrepl" class="anchor" href="#neshrepl"><span class="octicon octicon-link"></span></a>nesh.repl</h4>
 
 <p>An object with a <code>start</code> function to create a new REPL-like object. Defaults to the built-in Node.js <code>repl</code> module. This can be set when a language is loaded or by plugins to provide extra functionality.</p>
 
-<h4>nesh.plugins</h4>
+<h4>
+<a name="neshplugins" class="anchor" href="#neshplugins"><span class="octicon octicon-link"></span></a>nesh.plugins</h4>
 
 <p>A list of loaded plugins. This is usually populated by the <code>nesh.loadPlugin</code> function.</p>
 
-<h4>nesh.languages ()</h4>
+<h4>
+<a name="neshlanguages-" class="anchor" href="#neshlanguages-"><span class="octicon octicon-link"></span></a>nesh.languages ()</h4>
 
 <p>Get a list of supported built-in languages that can be passed as strings to <code>nesh.loadLanguage</code>.</p>
 
-<h4>nesh.loadLanguage (language)</h4>
+<h4>
+<a name="neshloadlanguage-language" class="anchor" href="#neshloadlanguage-language"><span class="octicon octicon-link"></span></a>nesh.loadLanguage (language)</h4>
 
 <p>Load a language to be interpreted, e.g. <code>coffee</code> for CoffeeScript. Can also take in a function to be called to load the language. See below in the Extending the Interpreter section for details.</p>
 
-<h4>nesh.loadPlugin (plugin)</h4>
+<h4>
+<a name="neshloadplugin-plugin" class="anchor" href="#neshloadplugin-plugin"><span class="octicon octicon-link"></span></a>nesh.loadPlugin (plugin)</h4>
 
 <p>Loads a plugin by name or as an object - see below in the Extending the Interpreter section for details.</p>
 
-<h4>nesh.init (autoload, [callback])</h4>
+<h4>
+<a name="neshinit-autoload-callback" class="anchor" href="#neshinit-autoload-callback"><span class="octicon octicon-link"></span></a>nesh.init (autoload, [callback])</h4>
 
 <p>Initialize the Nesh module. If <code>autoload</code> is true then a default set of plugins is loaded, as well as any plugins defined in the user configuration in <code>~/.nesh_config.json</code>. This function doesn't need to be called explicitly as it will be called by <code>nesh.start</code>, but is provided to give you more control over the loading process.</p>
 
-<h4>nesh.start ([opts], [callback])</h4>
+<h4>
+<a name="neshstart-opts-callback" class="anchor" href="#neshstart-opts-callback"><span class="octicon octicon-link"></span></a>nesh.start ([opts], [callback])</h4>
 
 <p>Create a new nesh REPL with the passed options <code>opts</code>. Allowed options include the defaults from the Node REPL module (<a href="http://nodejs.org/api/repl.html">http://nodejs.org/api/repl.html</a>) as well as the following:</p>
 
@@ -290,37 +330,45 @@ nesh --disable welcome
 <code>historyMaxInputSize</code> The maximum number of bytes of history to load</li>
 <li>
 <code>welcome</code> A welcome message to be displayed on startup</li>
-</ul><h2>Configuration</h2>
+</ul><h2>
+<a name="configuration" class="anchor" href="#configuration"><span class="octicon octicon-link"></span></a>Configuration</h2>
 
 <p>Nesh provides a basic configuration system that by default stores data in <code>~/.nesh_config.json</code>. This system is usable by plugins, languages, etc. The <code>nesh</code> command loads this configuration file on startup. When embedding the interpreter, you may wish to do this as well via the <code>nesh.config.load()</code> function.</p>
 
-<h3>Configuration Reference</h3>
+<h3>
+<a name="configuration-reference" class="anchor" href="#configuration-reference"><span class="octicon octicon-link"></span></a>Configuration Reference</h3>
 
-<h4>nesh.config.path</h4>
+<h4>
+<a name="neshconfigpath" class="anchor" href="#neshconfigpath"><span class="octicon octicon-link"></span></a>nesh.config.path</h4>
 
 <p>The path to the default configuration file location.</p>
 
-<h4>nesh.config.reset ()</h4>
+<h4>
+<a name="neshconfigreset-" class="anchor" href="#neshconfigreset-"><span class="octicon octicon-link"></span></a>nesh.config.reset ()</h4>
 
 <p>Reset the config to a blank state, i.e. <code>{}</code>.</p>
 
-<h4>nesh.config.load ([path])</h4>
+<h4>
+<a name="neshconfigload-path" class="anchor" href="#neshconfigload-path"><span class="octicon octicon-link"></span></a>nesh.config.load ([path])</h4>
 
 <p>Loads a configuration file. Once loaded, the config may be accessed via <code>nesh.config.get()</code>. Note: this may throw errors if parsing the file fails.</p>
 
-<h4>nesh.config.save ([path])</h4>
+<h4>
+<a name="neshconfigsave-path" class="anchor" href="#neshconfigsave-path"><span class="octicon octicon-link"></span></a>nesh.config.save ([path])</h4>
 
 <p>Saves a configuration file. Note: this may throw errors if the path cannot be written to, you are over your disk quota, etc.</p>
 
-<h4>nesh.config.get ()</h4>
+<h4>
+<a name="neshconfigget-" class="anchor" href="#neshconfigget-"><span class="octicon octicon-link"></span></a>nesh.config.get ()</h4>
 
 <p>Get the currently loaded configuration. This defaults to <code>{}</code>.</p>
 
-<h2>Logging</h2>
+<h2>
+<a name="logging" class="anchor" href="#logging"><span class="octicon octicon-link"></span></a>Logging</h2>
 
 <p>Nesh comes with a built-in logging framework to make it easy for plugins to log information. By default, each message will be sent to stdout, which is not ideal for many applications. Therefore, it is possible to modify the logger to provide integration with whatever logging framework your application is using. There are even convenience functions to do so for popular logging frameworks. For example, if your application is using Winston:</p>
 
-<div class="highlight"><pre><span class="nv">nesh = </span><span class="nx">require</span> <span class="s">'nesh'</span>
+<div class="highlight highlight-coffeescript"><pre><span class="nv">nesh = </span><span class="nx">require</span> <span class="s">'nesh'</span>
 
 <span class="nx">nesh</span><span class="p">.</span><span class="nx">log</span><span class="p">.</span><span class="nx">winston</span><span class="p">()</span>
 
@@ -330,7 +378,7 @@ nesh --disable welcome
 
 <p>If using a different logging framework or custom log output, you can manually override the logger functions. For example:</p>
 
-<div class="highlight"><pre><span class="nv">nesh = </span><span class="nx">require</span> <span class="s">'nesh'</span>
+<div class="highlight highlight-coffeescript"><pre><span class="nv">nesh = </span><span class="nx">require</span> <span class="s">'nesh'</span>
 
 <span class="p">...</span>
 <span class="nv">nesh.log.log = </span><span class="nf">(level, message) -&gt;</span>
@@ -340,80 +388,95 @@ nesh --disable welcome
 <span class="p">...</span>
 </pre></div>
 
-<h3>Logging Reference</h3>
+<h3>
+<a name="logging-reference" class="anchor" href="#logging-reference"><span class="octicon octicon-link"></span></a>Logging Reference</h3>
 
-<h4>nesh.log.DEBUG</h4>
+<h4>
+<a name="neshlogdebug" class="anchor" href="#neshlogdebug"><span class="octicon octicon-link"></span></a>nesh.log.DEBUG</h4>
 
 <p>The debug logging level.</p>
 
-<h4>nesh.log.INFO</h4>
+<h4>
+<a name="neshloginfo" class="anchor" href="#neshloginfo"><span class="octicon octicon-link"></span></a>nesh.log.INFO</h4>
 
 <p>The informational logging level.</p>
 
-<h4>nesh.log.WARN</h4>
+<h4>
+<a name="neshlogwarn" class="anchor" href="#neshlogwarn"><span class="octicon octicon-link"></span></a>nesh.log.WARN</h4>
 
 <p>The warning logging level.</p>
 
-<h4>nesh.log.ERROR</h4>
+<h4>
+<a name="neshlogerror" class="anchor" href="#neshlogerror"><span class="octicon octicon-link"></span></a>nesh.log.ERROR</h4>
 
 <p>The error logging level.</p>
 
-<h4>nesh.log.level</h4>
+<h4>
+<a name="neshloglevel" class="anchor" href="#neshloglevel"><span class="octicon octicon-link"></span></a>nesh.log.level</h4>
 
 <p>The current logging level.</p>
 
-<h4>nesh.log.levelName ()</h4>
+<h4>
+<a name="neshloglevelname-" class="anchor" href="#neshloglevelname-"><span class="octicon octicon-link"></span></a>nesh.log.levelName ()</h4>
 
 <p>Get the name of the log level, e.g. <code>'warn'</code> for <code>nesh.log.WARN</code></p>
 
-<h4>nesh.log.log (level, message)</h4>
+<h4>
+<a name="neshloglog-level-message" class="anchor" href="#neshloglog-level-message"><span class="octicon octicon-link"></span></a>nesh.log.log (level, message)</h4>
 
 <p>Log a message at a particular level if <code>nesh.log.level</code> allows it.</p>
 
-<h4>nesh.log.debug (message)</h4>
+<h4>
+<a name="neshlogdebug-message" class="anchor" href="#neshlogdebug-message"><span class="octicon octicon-link"></span></a>nesh.log.debug (message)</h4>
 
 <p>Log a debug message.</p>
 
-<h4>nesh.log.info (message)</h4>
+<h4>
+<a name="neshloginfo-message" class="anchor" href="#neshloginfo-message"><span class="octicon octicon-link"></span></a>nesh.log.info (message)</h4>
 
 <p>Log an info message.</p>
 
-<h4>nesh.log.warn (message)</h4>
+<h4>
+<a name="neshlogwarn-message" class="anchor" href="#neshlogwarn-message"><span class="octicon octicon-link"></span></a>nesh.log.warn (message)</h4>
 
 <p>Log a warning message.</p>
 
-<h4>nesh.log.error (message)</h4>
+<h4>
+<a name="neshlogerror-message" class="anchor" href="#neshlogerror-message"><span class="octicon octicon-link"></span></a>nesh.log.error (message)</h4>
 
 <p>Log an error message.</p>
 
-<h4>nesh.log.test ()</h4>
+<h4>
+<a name="neshlogtest-" class="anchor" href="#neshlogtest-"><span class="octicon octicon-link"></span></a>nesh.log.test ()</h4>
 
 <p>Reconfigure the logging to store sent messages in <code>nesh.log.output</code> and disable console colors. This makes testing log output much simpler.</p>
 
-<h4>nesh.log.winston ()</h4>
+<h4>
+<a name="neshlogwinston-" class="anchor" href="#neshlogwinston-"><span class="octicon octicon-link"></span></a>nesh.log.winston ()</h4>
 
 <p>Reconfigure the logging to use Winston to output messages.</p>
 
-<h2>Extending the Interpreter</h2>
+<h2>
+<a name="extending-the-interpreter" class="anchor" href="#extending-the-interpreter"><span class="octicon octicon-link"></span></a>Extending the Interpreter</h2>
 
 <p>The Nesh interpreter can be easily extended with new languages and plugins.</p>
 
 <p>Languages can be added using the <code>nesh.loadLanguage</code> function. New languages should override <code>nesh.compile</code>, <code>nesh.repl</code>, and probably <code>nesh.defaults.historyFile</code>. The <code>nesh.repl</code> object should provide a Node REPL-like interface with a <code>start</code> function and return a REPL-like object which may be modified by plugins. The <code>context</code> object has the following attributes:</p>
 
 <table>
-<tr>
+<thead><tr>
 <th>Attribute</th>
 <th>Description</th>
 <th align="right">Introduced</th>
-</tr>
-<tr>
+</tr></thead>
+<tbody><tr>
 <td><code>nesh</code></td>
 <td>A reference to the Nesh module</td>
 <td align="right">1.0.0</td>
-</tr>
+</tr></tbody>
 </table><p>For example:</p>
 
-<div class="highlight"><pre><span class="nv">nesh = </span><span class="nx">require</span> <span class="s">'nesh'</span>
+<div class="highlight highlight-coffeescript"><pre><span class="nv">nesh = </span><span class="nx">require</span> <span class="s">'nesh'</span>
 <span class="nv">mylang = </span><span class="nx">require</span> <span class="s">'mylang'</span>
 
 <span class="nx">nesh</span><span class="p">.</span><span class="nx">loadLanguage</span> <span class="nf">(context) -&gt;</span>
@@ -428,7 +491,7 @@ nesh --disable welcome
             <span class="c1"># Don't forget to return the REPL!</span>
             <span class="k">return</span> <span class="nx">repl</span>
     <span class="nv">nesh.defaults.welcome = </span><span class="s">'Welcome to my interpreter!'</span>
-    <span class="nv">nesh.defaults.historyFile = </span><span class="nx">path</span><span class="p">.</span><span class="nx">join</span><span class="p">(</span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">HOME</span><span class="p">,</span> <span class="s">'.mylang_history'</span><span class="p">)</span>
+    <span class="nv">nesh.defaults.historyFile = </span><span class="nx">path</span><span class="p">.</span><span class="nx">join</span><span class="p">(</span><span class="nx">nesh</span><span class="p">.</span><span class="nx">config</span><span class="p">.</span><span class="nx">home</span><span class="p">,</span> <span class="s">'.mylang_history'</span><span class="p">)</span>
 
 <span class="nx">nesh</span><span class="p">.</span><span class="nx">start</span> <span class="nf">(err) -&gt;</span>
     <span class="nx">nesh</span><span class="p">.</span><span class="nx">log</span><span class="p">.</span><span class="nx">error</span> <span class="nx">err</span> <span class="k">if</span> <span class="nx">err</span>
@@ -436,7 +499,7 @@ nesh --disable welcome
 
 <p>Plugins should set a <code>name</code> and <code>description</code>. Plugins may also define <code>setup</code>, <code>preStart</code>, and <code>postStart</code> functions that are called when the plugin is loaded, before a REPL is created, and after a REPL has been created respectively. Plugins are loaded via the <code>nesh.loadPlugin</code> function. A very simple example plugin written in CoffeeScript might look like this:</p>
 
-<div class="highlight"><pre><span class="nv">nesh = </span><span class="nx">require</span> <span class="s">'nesh'</span>
+<div class="highlight highlight-coffeescript"><pre><span class="nv">nesh = </span><span class="nx">require</span> <span class="s">'nesh'</span>
 <span class="nv">util = </span><span class="nx">require</span> <span class="s">'util'</span>
 
 <span class="nv">myPlugin =</span>
@@ -466,11 +529,12 @@ nesh --disable welcome
 
 <p>Several plugins ship with Nesh, just take a look at the <code>src/plugins</code> directory. If these ever need to be removed then you can do so by accessing the <code>nesh.plugins</code> array. You can also prevent loading the default set of plugins by manually calling <code>nesh.init</code> with <code>autoload</code> set to <code>false</code>.</p>
 
-<h3>Asyncronous Plugins</h3>
+<h3>
+<a name="asyncronous-plugins" class="anchor" href="#asyncronous-plugins"><span class="octicon octicon-link"></span></a>Asyncronous Plugins</h3>
 
 <p>Sometimes, a plugin may take actions that must run asyncronously. To support these cases, each of the plugin's functions can take a callback parameter <code>next</code> which must be called when finished. For example, if we were loading the welcome message's default value from a database with an asyncronous call:</p>
 
-<div class="highlight"><pre><span class="nv">myPlugin =</span>
+<div class="highlight highlight-coffeescript"><pre><span class="nv">myPlugin =</span>
     <span class="nv">setup: </span><span class="nf">(context, next) -&gt;</span>
         <span class="p">{</span><span class="nx">defaults</span><span class="p">}</span> <span class="o">=</span> <span class="nx">context</span><span class="p">.</span><span class="nx">nesh</span>
         <span class="nx">mongodb</span><span class="p">.</span><span class="nx">findOne</span> <span class="nv">name: </span><span class="s">'defaultWelcome'</span><span class="p">,</span> <span class="nf">(err, item) -&gt;</span>
@@ -480,7 +544,8 @@ nesh --disable welcome
             <span class="nx">next</span><span class="p">()</span>
 </pre></div>
 
-<h3>Default Plugins</h3>
+<h3>
+<a name="default-plugins" class="anchor" href="#default-plugins"><span class="octicon octicon-link"></span></a>Default Plugins</h3>
 
 <p>Nesh ships with several default plugins:</p>
 
@@ -498,35 +563,39 @@ nesh --disable welcome
 <li>
 <code>welcome</code> Adds a welcome message to the interactive interpreter via <code>opts.welcome</code>
 </li>
-</ul><h3>Plugin Reference</h3>
+</ul><h3>
+<a name="plugin-reference" class="anchor" href="#plugin-reference"><span class="octicon octicon-link"></span></a>Plugin Reference</h3>
 
-<h4>Plugin.setup (context, [next])</h4>
+<h4>
+<a name="pluginsetup-context-next" class="anchor" href="#pluginsetup-context-next"><span class="octicon octicon-link"></span></a>Plugin.setup (context, [next])</h4>
 
 <p>Called when the plugin is first loaded. If <code>next</code> is defined, then the function is treated as asyncronous and <code>next</code> will be passed a function that must be called when finished. If an error occurs, then the error should be passed to <code>next</code>. The <code>context</code> passed in is an object containing the values defined below:</p>
 
 <table>
-<tr>
+<thead><tr>
 <th>Attribute</th>
 <th>Description</th>
 <th align="right">Introduced</th>
-</tr>
-<tr>
+</tr></thead>
+<tbody><tr>
 <td><code>nesh</code></td>
 <td>A reference to the Nesh module</td>
 <td align="right">1.0.0</td>
-</tr>
+</tr></tbody>
 </table><p>This is a good place to add or modify default values via <code>context.nesh.defaults</code>.</p>
 
-<h4>Plugin.preStart (context, [next])</h4>
+<h4>
+<a name="pluginprestart-context-next" class="anchor" href="#pluginprestart-context-next"><span class="octicon octicon-link"></span></a>Plugin.preStart (context, [next])</h4>
 
 <p>Called when <code>nesh.start</code> has been called but before the REPL is created and started. If <code>next</code> is defined, then the function is treated as asyncronous and <code>next</code> will be passed a function that must be called when finished. If an error occurs, then the error should be passed to <code>next</code>. The <code>context</code> passed in is an object containing the values defined below:</p>
 
 <table>
-<tr>
+<thead><tr>
 <th>Attribute</th>
 <th>Description</th>
 <th align="right">Introduced</th>
-</tr>
+</tr></thead>
+<tbody>
 <tr>
 <td><code>nesh</code></td>
 <td>A reference to the Nesh module</td>
@@ -538,18 +607,21 @@ nesh --disable welcome
 </td>
 <td align="right">1.0.0</td>
 </tr>
+</tbody>
 </table><p>This is a good place to print out information or modify the passed in options before they are sent to the REPL, e.g. <code>context.options.welcome = 'foo'</code>.</p>
 
-<h4>Plugin.postStart (context, [next])</h4>
+<h4>
+<a name="pluginpoststart-context-next" class="anchor" href="#pluginpoststart-context-next"><span class="octicon octicon-link"></span></a>Plugin.postStart (context, [next])</h4>
 
 <p>Called when <code>nesh.start</code> has been called and the REPL is started. The <code>repl</code> passed in is the newly created and started REPL from the <code>nesh.start</code> call and includes the <code>opts</code> from above as <code>repl.opts</code>. If <code>next</code> is defined, then the function is treated as asyncronous and <code>next</code> will be passed a function that must be called when finished. If an error occurs, then the error should be passed to <code>next</code>.</p>
 
 <table>
-<tr>
+<thead><tr>
 <th>Attribute</th>
 <th>Description</th>
 <th align="right">Introduced</th>
-</tr>
+</tr></thead>
+<tbody>
 <tr>
 <td><code>nesh</code></td>
 <td>A reference to the Nesh module</td>
@@ -566,56 +638,63 @@ nesh --disable welcome
 <td>The created REPL instance</td>
 <td align="right">1.0.0</td>
 </tr>
+</tbody>
 </table><p>This is a good place to modify the REPL, e.g. adding new commands, modifying history, listening for specific key strokes, etc.</p>
 
-<h2>Development</h2>
+<h2>
+<a name="development" class="anchor" href="#development"><span class="octicon octicon-link"></span></a>Development</h2>
 
 <p>Nesh development is easy! Just grab the source with git and start hacking around. Contributions, especially interesting languages and plugins, are always welcome!</p>
 
-<h3>Building</h3>
+<h3>
+<a name="building" class="anchor" href="#building"><span class="octicon octicon-link"></span></a>Building</h3>
 
 <p>After making changes it is important to run a build step to generate the Javascript which gets loaded when you import the <code>nesh</code> module, which makes it work across all Node languages.</p>
 
-<div class="highlight"><pre>cake build
+<div class="highlight highlight-bash"><pre>cake build
 </pre></div>
 
-<h3>Running a local <code>nesh</code>
+<h3>
+<a name="running-a-local-nesh" class="anchor" href="#running-a-local-nesh"><span class="octicon octicon-link"></span></a>Running a local <code>nesh</code>
 </h3>
 
 <p>You can run the <code>nesh</code> command from your local checkout:</p>
 
-<div class="highlight"><pre>./bin/nesh.js
+<div class="highlight highlight-bash"><pre>./bin/nesh.js
 </pre></div>
 
 <p>It is also possible to use <code>npm</code> to link your local checkout globally (note: this may require <code>sudo</code>):</p>
 
-<div class="highlight"><pre>npm link
+<div class="highlight highlight-bash"><pre>npm link
 </pre></div>
 
 <p>Now you should be able to run <code>nesh</code> from anywhere and have it use your development version.</p>
 
-<h3>Unit Tests</h3>
+<h3>
+<a name="unit-tests" class="anchor" href="#unit-tests"><span class="octicon octicon-link"></span></a>Unit Tests</h3>
 
 <p>The unit test suite can be run via the following:</p>
 
-<div class="highlight"><pre>cake <span class="nb">test</span>
+<div class="highlight highlight-bash"><pre>cake <span class="nb">test</span>
 </pre></div>
 
-<h3>Testing new plugins</h3>
+<h3>
+<a name="testing-new-plugins" class="anchor" href="#testing-new-plugins"><span class="octicon octicon-link"></span></a>Testing new plugins</h3>
 
 <p>You can test out new plugins that have their own NPM package by linking them into the plugins directory:</p>
 
-<div class="highlight"><pre>ln -s ~/Projects/nesh-myplugin ~/.nesh_modules/node_modules/
+<div class="highlight highlight-bash"><pre>ln -s ~/Projects/nesh-myplugin ~/.nesh_modules/node_modules/
 </pre></div>
 
 <p>Then modify your <code>~/.nesh_config.json</code> file to enable the plugin. A minimal configuration looks like the following:</p>
 
-<div class="highlight"><pre><span class="p">{</span>
+<div class="highlight highlight-javascript"><pre><span class="p">{</span>
     <span class="nx">plugins</span><span class="o">:</span> <span class="p">[</span><span class="s2">"nesh-myplugin"</span><span class="p">]</span>
 <span class="p">}</span>
 </pre></div>
 
-<h2>License</h2>
+<h2>
+<a name="license" class="anchor" href="#license"><span class="octicon octicon-link"></span></a>License</h2>
 
 <p>Copyright (c) 2013 Daniel G. Taylor</p>
 
