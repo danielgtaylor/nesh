@@ -28,4 +28,4 @@ exports.setup = (context) ->
     # !! with the fixed-in version number filled in for '?'
     nesh.defaults.useGlobal = no # semver.satisfies(coffee.VERSION, ">= ?")
     # Save history in ~/.coffee_history
-    nesh.defaults.historyFile = path.join(process.env.HOME, '.coffee_history')
+    nesh.defaults.historyFile = path.join(nesh.config.home, '.coffee_history')

@@ -118,7 +118,7 @@ nesh.loadPlugin = (plugin, callback) ->
             plugin = require "./plugins/#{name}"
         catch e
             try
-                prefix = path.join process.env.HOME, '.nesh_modules', 'node_modules'
+                prefix = path.join nesh.config.home, '.nesh_modules', 'node_modules'
                 plugin = require path.join(prefix, name)
             catch e
                 return callback "Could not find plugin '#{name}': #{e}!"

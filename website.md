@@ -354,7 +354,7 @@ nesh.loadLanguage (context) ->
             # Don't forget to return the REPL!
             return repl
     nesh.defaults.welcome = 'Welcome to my interpreter!'
-    nesh.defaults.historyFile = path.join(process.env.HOME, '.mylang_history')
+    nesh.defaults.historyFile = path.join(nesh.config.home, '.mylang_history')
 
 nesh.start (err) ->
     nesh.log.error err if err

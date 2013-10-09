@@ -82,7 +82,7 @@ if argv.enable
     install = enabled.filter (item) ->
         not fs.existsSync "./plugins/#{item}.js"
 
-    prefix = path.join process.env.HOME, '.nesh_modules'
+    prefix = path.join nesh.config.home, '.nesh_modules'
     if install.length
         # Install via NPM into a custom location
         exec "npm --prefix=#{prefix} --color=always install #{install.join ' '} 2>&1", (err, stdout) ->
@@ -102,7 +102,7 @@ if argv.disable
     # Nesh configuration file.
     disabled = argv.disable.split ','
 
-    prefix = path.join process.env.HOME, '.nesh_modules'
+    prefix = path.join nesh.config.home, '.nesh_modules'
     uninstall = disabled.filter (item) ->
         fs.existsSync path.join(prefix, 'node_modules', item)
 
