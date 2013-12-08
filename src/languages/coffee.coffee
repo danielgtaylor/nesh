@@ -23,9 +23,11 @@ exports.setup = (context) ->
     # Set the CoffeeScript prompt
     nesh.defaults.prompt = 'coffee> '
     # !! While we *want* to use the global context, a bug in CoffeeScript as of 1.6.3 
-    # !! - see https://github.com/jashkenas/coffee-script/pull/3113 - currently prevents that.
-    # !! Once the bug has been fixed, replace 'no' with the expression in the inline comment, 
-    # !! with the fixed-in version number filled in for '?'
-    nesh.defaults.useGlobal = no # semver.satisfies(coffee.VERSION, ">= ?")
+    # !! - see https://github.com/jashkenas/coffee-script/pull/3113 - prevents that.
+    # !! Versions newer than 1.6.3 include the fix.
+    nesh.defaults.useGlobal = semver.satisfies(coffee.VERSION, "> 1.6.3")
+    if not nesh.defaults.useGlobal
+        log.warn 'Warning: inherited global context requires CoffeeScript > 1.6.3'
+        log.warn '         packages that modify built-in prototypes may not work'
     # Save history in ~/.coffee_history
     nesh.defaults.historyFile = path.join(nesh.config.home, '.coffee_history')
