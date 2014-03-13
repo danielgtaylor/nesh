@@ -6,6 +6,6 @@ task 'build', 'Build lib from src', ->
         throw err if err
 
 task 'test', 'Run library tests', ->
-    exec './node_modules/mocha/bin/mocha --compilers coffee:coffee-script -R spec --colors test/*.coffee', (err, stdout) ->
+    exec './node_modules/mocha/bin/mocha --compilers coffee:coffee-script/register -R spec --colors test/*.coffee', (err, stdout) ->
         console.log stdout
         throw err if err
