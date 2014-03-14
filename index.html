@@ -41,6 +41,8 @@
 <li>Persistent history</li>
 <li>Preloading code within the interpreter</li>
 <li>Built-in convenience functions</li>
+<li>Method introspection via <code>ctrl-q</code>
+</li>
 <li>Easily extensible interactive environment</li>
 <li>Simple to embed in your own applications</li>
 <li>Asyncronous plugin architecture</li>
@@ -126,7 +128,7 @@ nesh -c -e hello.js
 <h2>
 <a name="plugins" class="anchor" href="#plugins"><span class="octicon octicon-link"></span></a>Plugins</h2>
 
-<p>Plugins can add functionality to Nesh. Plugins are published via NPM just like any other Node.js package. Plugins published via NPM should use <code>nesh-</code> as the naming prefix, which makes them easier to find. </p>
+<p>Plugins can add functionality to Nesh. Plugins are published via NPM just like any other Node.js package. Plugins published via NPM should use <code>nesh-</code> as the naming prefix, which makes them easier to find.</p>
 
 <ul>
 <li><a href="https://npmjs.org/browse/keyword/nesh">Published plugins</a></li>
@@ -156,6 +158,41 @@ nesh --disable welcome
 <a name="convenience-functions" class="anchor" href="#convenience-functions"><span class="octicon octicon-link"></span></a>Convenience Functions</h2>
 
 <p>When run from the <code>nesh</code> command several built-in convenience functions are available.</p>
+
+<h3>
+<a name="repl-commands" class="anchor" href="#repl-commands"><span class="octicon octicon-link"></span></a>REPL Commands</h3>
+
+<h4>
+<a name="cls" class="anchor" href="#cls"><span class="octicon octicon-link"></span></a>.cls</h4>
+
+<p>Clears the screen</p>
+
+<h4>
+<a name="require-module" class="anchor" href="#require-module"><span class="octicon octicon-link"></span></a>.require module</h4>
+
+<p>Shortcut for requiring a module and assigning it to a variable of the same name, e.g:</p>
+
+<div class="highlight highlight-js"><pre><span class="nx">nesh</span><span class="o">&gt;</span> <span class="p">.</span><span class="nx">require</span> <span class="nx">fs</span>
+<span class="nx">nesh</span><span class="o">&gt;</span> <span class="nx">fs</span><span class="p">.</span><span class="nx">readFileSync</span><span class="p">(...);</span>
+</pre></div>
+
+<h4>
+<a name="doc-object-or-method" class="anchor" href="#doc-object-or-method"><span class="octicon octicon-link"></span></a>.doc object or method</h4>
+
+<p>Get documentation about an object. Can be invoked with either <code>.doc</code> or <code>ctrl-q</code>. Pressing <code>ctrl-q</code> twice will dump out the source of the object or method.</p>
+
+<div class="highlight highlight-js"><pre><span class="nx">nesh</span><span class="o">&gt;</span> <span class="p">.</span><span class="nx">doc</span> <span class="nx">fs</span><span class="p">.</span><span class="nx">readFileSync</span>
+<span class="p">[</span><span class="nb">Function</span><span class="p">]</span> <span class="p">(</span><span class="nx">path</span><span class="p">,</span> <span class="nx">options</span><span class="p">)</span>
+
+<span class="c1">// Or with ctrl-q</span>
+<span class="nx">nesh</span><span class="o">&gt;</span> <span class="nx">path</span><span class="p">.</span><span class="nx">extname</span>
+<span class="p">[</span><span class="nb">Function</span><span class="p">]</span> <span class="p">(</span><span class="nx">path</span><span class="p">)</span>
+
+<span class="c1">// And ctrl-q again</span>
+<span class="kd">function</span> <span class="p">(</span><span class="nx">path</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="nx">splitPath</span><span class="p">(</span><span class="nx">path</span><span class="p">)[</span><span class="mi">3</span><span class="p">];</span>
+<span class="p">}</span>
+</pre></div>
 
 <h3>
 <a name="modules" class="anchor" href="#modules"><span class="octicon octicon-link"></span></a>Modules</h3>
@@ -696,7 +733,7 @@ nesh --disable welcome
 <h2>
 <a name="license" class="anchor" href="#license"><span class="octicon octicon-link"></span></a>License</h2>
 
-<p>Copyright (c) 2013 Daniel G. Taylor</p>
+<p>Copyright (c) 2014 Daniel G. Taylor</p>
 
 <p>Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:</p>
 
@@ -705,7 +742,7 @@ nesh --disable welcome
 <p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</p>
       </section>
       <footer>
-        <p><small>Hosted on <a href="https://pages.github.com">GitHub Pages</a> using the Dinky theme</small></p>
+        <p><small>Hosted on <a href="http://pages.github.com">GitHub Pages</a> using the Dinky theme</small></p>
       </footer>
     </div>
     <!--[if !IE]><script>fixScale(document);</script><![endif]-->
