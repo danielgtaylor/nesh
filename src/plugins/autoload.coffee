@@ -29,7 +29,7 @@ exports.setup = (context, next) ->
     nesh.log.debug 'Loading plugin autoload'
 
     # The default list of plugins
-    defaultPlugins = ['builtins', 'eval', 'history', 'version', 'welcome', 'require']
+    defaultPlugins = ['builtins', 'eval', 'history', 'version', 'welcome', 'require', 'doc']
 
     # Get the Nesh user configuration
     config = nesh.config.get()
