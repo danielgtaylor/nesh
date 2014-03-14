@@ -10,7 +10,7 @@ An enhanced extensible interactive interpreter (REPL) for Node.js and languages 
  * Method introspection via `ctrl-q`
  * Easily extensible interactive environment
  * Simple to embed in your own applications
- * Asyncronous plugin architecture
+ * Asynchronous plugin architecture
  * Multi-language support (e.g. CoffeeScript)
  * Per-user plugin management
 
@@ -424,8 +424,8 @@ nesh.loadPlugin myPlugin, (err) ->
 
 Several plugins ship with Nesh, just take a look at the `src/plugins` directory. If these ever need to be removed then you can do so by accessing the `nesh.plugins` array. You can also prevent loading the default set of plugins by manually calling `nesh.init` with `autoload` set to `false`.
 
-### Asyncronous Plugins
-Sometimes, a plugin may take actions that must run asyncronously. To support these cases, each of the plugin's functions can take a callback parameter `next` which must be called when finished. For example, if we were loading the welcome message's default value from a database with an asyncronous call:
+### Asynchronous Plugins
+Sometimes, a plugin may take actions that must run asynchronously. To support these cases, each of the plugin's functions can take a callback parameter `next` which must be called when finished. For example, if we were loading the welcome message's default value from a database with an asynchronous call:
 
 ```coffeescript
 myPlugin =
