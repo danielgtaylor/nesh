@@ -7,6 +7,7 @@ An enhanced extensible interactive interpreter (REPL) for Node.js and languages 
  * Persistent history
  * Preloading code within the interpreter
  * Built-in convenience functions
+ * Method introspection via `ctrl-q`
  * Easily extensible interactive environment
  * Simple to embed in your own applications
  * Asyncronous plugin architecture
@@ -90,7 +91,7 @@ nesh -c -e hello.js
 
 Plugins
 -------
-Plugins can add functionality to Nesh. Plugins are published via NPM just like any other Node.js package. Plugins published via NPM should use `nesh-` as the naming prefix, which makes them easier to find. 
+Plugins can add functionality to Nesh. Plugins are published via NPM just like any other Node.js package. Plugins published via NPM should use `nesh-` as the naming prefix, which makes them easier to find.
 
  * [Published plugins](https://npmjs.org/browse/keyword/nesh)
 
@@ -122,6 +123,36 @@ See the section below on Extending the Interpreter for information on how to wri
 Convenience Functions
 ---------------------
 When run from the `nesh` command several built-in convenience functions are available.
+
+### REPL Commands
+
+#### .cls
+Clears the screen
+
+#### .require module
+Shortcut for requiring a module and assigning it to a variable of the same name, e.g:
+
+```js
+nesh> .require fs
+nesh> fs.readFileSync(...);
+```
+
+#### .doc object or method
+Get documentation about an object. Can be invoked with either `.doc` or `ctrl-q`. Pressing `ctrl-q` twice will dump out the source of the object or method.
+
+```js
+nesh> .doc fs.readFileSync
+[Function] (path, options)
+
+// Or with ctrl-q
+nesh> path.extname
+[Function] (path)
+
+// And ctrl-q again
+function (path) {
+  return splitPath(path)[3];
+}
+```
 
 ### Modules
 
