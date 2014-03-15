@@ -45,7 +45,7 @@
 </li>
 <li>Easily extensible interactive environment</li>
 <li>Simple to embed in your own applications</li>
-<li>Asyncronous plugin architecture</li>
+<li>Asynchronous plugin architecture</li>
 <li>Multi-language support (e.g. CoffeeScript)</li>
 <li>Per-user plugin management</li>
 </ul><p><a href="https://gemnasium.com/danielgtaylor/nesh"><img src="https://gemnasium.com/danielgtaylor/nesh.png" alt="Dependency Status"></a> <a href="https://travis-ci.org/danielgtaylor/nesh"><img src="https://travis-ci.org/danielgtaylor/nesh.png?branch=master" alt="Build Status"></a></p>
@@ -567,9 +567,9 @@ nesh --disable welcome
 <p>Several plugins ship with Nesh, just take a look at the <code>src/plugins</code> directory. If these ever need to be removed then you can do so by accessing the <code>nesh.plugins</code> array. You can also prevent loading the default set of plugins by manually calling <code>nesh.init</code> with <code>autoload</code> set to <code>false</code>.</p>
 
 <h3>
-<a name="asyncronous-plugins" class="anchor" href="#asyncronous-plugins"><span class="octicon octicon-link"></span></a>Asyncronous Plugins</h3>
+<a name="asynchronous-plugins" class="anchor" href="#asynchronous-plugins"><span class="octicon octicon-link"></span></a>Asynchronous Plugins</h3>
 
-<p>Sometimes, a plugin may take actions that must run asyncronously. To support these cases, each of the plugin's functions can take a callback parameter <code>next</code> which must be called when finished. For example, if we were loading the welcome message's default value from a database with an asyncronous call:</p>
+<p>Sometimes, a plugin may take actions that must run asynchronously. To support these cases, each of the plugin's functions can take a callback parameter <code>next</code> which must be called when finished. For example, if we were loading the welcome message's default value from a database with an asynchronous call:</p>
 
 <div class="highlight highlight-coffeescript"><pre><span class="nv">myPlugin =</span>
     <span class="nv">setup: </span><span class="nf">(context, next) -&gt;</span>
