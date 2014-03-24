@@ -2,7 +2,7 @@
 Builtin Utilities Plugin
 ###
 
-_ = require 'underscore'
+_ = require 'lodash-node'
 crypto = require 'crypto'
 querystring = require 'querystring'
 
