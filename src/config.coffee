@@ -12,8 +12,8 @@ _config = {}
 
 config = exports
 
-# A platform-agnostic way of getting the user's home directory
-config.home = process.env.HOME or process.env.HOMEPATH or process.env.USERPROFILE
+# A platform-agnostic way of getting the user's home directory (Unix-like platforms: $HOME; Winwdows: %USERPROFILE%).
+config.home = process.env.HOME or process.env.USERPROFILE
 
 # The default path to the configuration file
 config.path = path.join config.home, '.nesh_config.json'
