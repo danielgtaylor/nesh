@@ -110,6 +110,9 @@ describe 'plugins', ->
                 called = true
                 throw new Error('Fake error!')
 
+        orig = nesh.log.error
+        nesh.log.error = ->
+
         nesh.loadPlugin plugin, (err) ->
             assert.equal false, err?
 
@@ -118,6 +121,7 @@ describe 'plugins', ->
                     write: (data) ->
 
             nesh.start opts, (err) ->
+                nesh.log.error = orig
                 nesh.plugins.pop()
                 assert.ok called
                 assert.equal true, err?
@@ -130,6 +134,9 @@ describe 'plugins', ->
                 called = true
                 next 'Fake error!'
 
+        orig = nesh.log.error
+        nesh.log.error = ->
+
         nesh.loadPlugin plugin, (err) ->
             assert.equal false, err?
 
@@ -138,6 +145,7 @@ describe 'plugins', ->
                     write: (data) ->
 
             nesh.start opts, (err) ->
+                nesh.log.error = orig
                 nesh.plugins.pop()
                 assert.ok called
                 assert.equal true, err?
@@ -172,6 +180,9 @@ describe 'plugins', ->
                 called = true
                 throw new Error('Fake error!')
 
+        orig = nesh.log.error
+        nesh.log.error = ->
+
         nesh.loadPlugin plugin, (err) ->
             assert.equal false, err?
 
@@ -180,6 +191,7 @@ describe 'plugins', ->
                     write: (data) ->
 
             nesh.start opts, (err) ->
+                nesh.log.error = orig
                 nesh.plugins.pop()
                 assert.ok called
                 assert.equal true, err?
@@ -192,6 +204,9 @@ describe 'plugins', ->
                 called = true
                 next 'Fake error!'
 
+        orig = nesh.log.error
+        nesh.log.error = ->
+
         nesh.loadPlugin plugin, (err) ->
             assert.equal false, err?
 
@@ -200,6 +215,7 @@ describe 'plugins', ->
                     write: (data) ->
 
             nesh.start opts, (err) ->
+                nesh.log.error = orig
                 nesh.plugins.pop()
                 assert.ok called
                 assert.equal true, err?
@@ -267,4 +283,16 @@ describe 'eval', ->
         nesh.start opts, (err, repl) ->
             assert.ok repl.context.hello
             assert.equal false, err?
+            done()
+
+    it 'should print failures during eval', (done) ->
+        opts =
+            evalData: 'throw new Error()'
+            outputStream:
+                write: (data) ->
+
+        nesh.start opts, (err, repl) ->
+            assert.ok err
+            assert.ok err.stack.toString().indexOf('eval') isnt -1
+            assert.ok err.stack.toString().indexOf('postStart') isnt -1
             done()

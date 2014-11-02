@@ -25,6 +25,12 @@ processPlugins = (method, arg, callback) ->
 
         if nesh.plugins[i][method]?
             callPluginMethod nesh.plugins[i][method], arg, (err) ->
+                if err
+                    nesh.log.error "Error in plugin #{nesh.plugins[i].name}:"
+                    if err.stack
+                        nesh.log.error err.stack
+                    else
+                        nesh.log.error err
                 return callback? err if err
                 process i + 1
         else
