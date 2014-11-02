@@ -41,10 +41,10 @@
   },
   "license": "MIT",
   "dependencies": {
-    "colors": ">=0.6 <1",
+    "colors": "~1.0.3",
     "optimist": ">=0.3.5 <1",
     "underscore": ">=1.4 <2",
-    "semver": "~2.2.1",
+    "semver": "~4.1.0",
     "intdoc": "~0.1.2",
     "lodash-node": "~2.4.1"
   },
@@ -53,7 +53,7 @@
   },
   "devDependencies": {
     "coffee-script": ">=1.7 <2",
-    "mocha": ">=1.17.1 <2"
+    "mocha": "~2.0.1"
   },
   "engines": {
     "node": ">=0.8.19"
