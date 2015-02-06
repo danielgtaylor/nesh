@@ -2,7 +2,7 @@
 The nesh command, which parses options and then drops the user
 into an interactive session.
 ###
-_ = require 'underscore'
+_ = require 'lodash-node'
 {exec} = require 'child_process'
 fs = require 'fs'
 nesh = require './nesh'
