@@ -16,7 +16,7 @@ Config options:
 }
 
 ###
-_ = require 'underscore'
+_ = require 'lodash-node'
 fs = require 'fs'
 nesh = require '../nesh'
 path = require 'path'

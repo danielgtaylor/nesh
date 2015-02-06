@@ -42,10 +42,10 @@
   "license": "MIT",
   "dependencies": {
     "colors": "~1.0.3",
+    "lodash-node": "^3.1.0",
     "nesh-doc": "^1.1.0",
     "optimist": ">=0.3.5 <1",
-    "semver": "~4.1.0",
-    "underscore": ">=1.4 <2"
+    "semver": "~4.1.0"
   },
   "peerDependencies": {
     "coffee-script": ">=1.6.2 <2"

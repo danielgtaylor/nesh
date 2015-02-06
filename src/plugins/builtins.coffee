@@ -2,7 +2,7 @@
 Builtin Utilities Plugin
 ###
 
-_ = require 'underscore'
+_ = require 'lodash-node'
 crypto = require 'crypto'
 querystring = require 'querystring'
 
@@ -13,8 +13,8 @@ exports.postStart = (context) ->
     {repl} = context
     
     ###
-    Underscore utilities, see:
-    http://documentcloud.github.io/underscore
+    Lodash utilities, see:
+    https://lodash.com/
     ###
     repl.context.__ = _
 
