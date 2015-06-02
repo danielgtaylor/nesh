@@ -11,6 +11,9 @@ path = require 'path'
 # Parse command-line options
 optimist = require('optimist')
     .usage('$0 [options]')
+    .options 'b',
+        describe: 'Load Babel for ES6/7 support; shortcut for -l babel'
+        boolean: true
     .options 'c',
         describe: 'Load CoffeeScript; shortcut for -l coffee'
         boolean: true
@@ -127,6 +130,10 @@ if argv.enable or argv.disable
 if argv.c
     # Shortcut for CoffeeScript
     argv.lang = 'coffee'
+
+if argv.b
+    # Shortcut for Babel ES6/7
+    argv.lang = 'babel'
 
 if argv.lang
     nesh.loadLanguage argv.lang
