@@ -1,6 +1,6 @@
 Node Enhanced Shell
 ===================
-An enhanced extensible interactive interpreter (REPL) for Node.js and languages that compile to Javascript, like CoffeeScript. Some features:
+An enhanced extensible interactive interpreter (REPL) for Node.js and languages that compile to Javascript, like CoffeeScript and Babel (ES6/7). Some features:
 
  * Lightweight & fast
  * Tab completion
@@ -11,7 +11,7 @@ An enhanced extensible interactive interpreter (REPL) for Node.js and languages 
  * Easily extensible interactive environment
  * Simple to embed in your own applications
  * Asynchronous plugin architecture
- * Multi-language support (e.g. CoffeeScript)
+ * Multi-language support (e.g. CoffeeScript, ES6/7)
  * Per-user plugin management
 
 [![Dependency Status](https://gemnasium.com/danielgtaylor/nesh.png)](https://gemnasium.com/danielgtaylor/nesh) [![Build Status](https://travis-ci.org/danielgtaylor/nesh.png?branch=master)](https://travis-ci.org/danielgtaylor/nesh)
@@ -28,6 +28,9 @@ nesh
 
 # Run nesh with CoffeeScript
 nesh -c
+
+# Run nesh with ES6 through Babel
+nesh -b
 ```
 
 If you wish to use `nesh` within your own project with `require 'nesh'` (i.e. to embed within your app) you can use the following non-global install instead. See Embedding the Interpreter below for more information.
@@ -48,10 +51,11 @@ nesh --help
 ```
 
 ### Setting a Language
-Nesh supports multiple languages, and ships with CoffeeScript support out of the box. To select a language:
+Nesh supports multiple languages, and ships with both CoffeeScript and ES6/7 (through Babel) support out of the box. To select a language:
 
 ```bash
 nesh --language coffee
+nesh --language babel
 ```
 
 You can get a list of supported built-in languages via:
@@ -60,7 +64,7 @@ You can get a list of supported built-in languages via:
 nesh --list-languages
 ```
 
-As a shortcut for CoffeeScript, you can use `nesh -c`. It's also pretty easy to set up an alias for this, e.g. `alias cs='nesh -c'` in bash.
+As a shortcut for CoffeeScript, you can use `nesh -c`. It's also pretty easy to set up an alias for this, e.g. `alias cs='nesh -c'` in bash. For ES6, you would use `nesh -b` instead.
 
 ### Setting a Prompt & Welcome Message
 A prompt can be set with the `--prompt` parameter, e.g. `nesh --prompt "test> "`. The welcome message can be set the same way with the `--welcome` parameter. You can disable the welcome message via e.g. `nesh --no-welcome`.
@@ -84,6 +88,7 @@ Languages other than Javascript can also be used. When using a non-Javascript la
 ```bash
 # Load code from a language-specific file
 nesh -c -e hello.coffee
+nesh -b -e hello.es6
 
 # Load code from a plain javascript file
 nesh -c -e hello.js
@@ -530,7 +535,7 @@ Then modify your `~/.nesh_config.json` file to enable the plugin. A minimal conf
 
 License
 -------
-Copyright (c) 2013 Daniel G. Taylor
+Copyright (c) 2015 Daniel G. Taylor
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
