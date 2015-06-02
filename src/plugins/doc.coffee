@@ -1,14 +1,14 @@
 colors = require 'colors'
 intdoc = require 'intdoc'
-objects = require 'lodash-node/modern/objects'
+lang = require 'lodash-node/modern/lang'
 vm = require 'vm'
 
 __doc__ = """Shows documentation for an expression; you can also type Ctrl-Q in-line"""
 
 lastTokenPlus = (input) ->
-  """A crude cut at figuring out where the last thing you want to 
+  """A crude cut at figuring out where the last thing you want to
     evaluate in what you're typing is
-    
+
     Ex. If you are typing
       myVal = new somemodule.SomeClass
 
@@ -34,12 +34,12 @@ lastTokenPlus = (input) ->
 exports.postStart = (context) ->
   {repl} = context
 
-  document = (expr, reportErrors, showCode) -> 
+  document = (expr, reportErrors, showCode) ->
     if expr.trim().length == 0
       if reportErrors
         repl.outputStream.write colors.cyan "#{ __doc__ }\n"
     else
-      try 
+      try
         if repl.useGlobal
           result = vm.runInThisContext "(#{ expr })"
         else
@@ -50,7 +50,7 @@ exports.postStart = (context) ->
         repl.displayPrompt()
         return null
 
-      if result.that? and objects.isFunction result
+      if result.that? and lang.isFunction result
         # This is a synchronized version of a fibrous function
         # so we look to the original one instead
         result = result.that
@@ -97,7 +97,7 @@ exports.postStart = (context) ->
     leave = true unless key and key.ctrl and not key.meta and not key.shift and key.name is 'q'
     if leave
       repl.__neshDoc__lastDoc = null
-      return 
+      return
     rli = repl.rli
     repl.__neshDoc__docRequested = true
     rli.write "\n"
