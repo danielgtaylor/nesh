@@ -81,8 +81,9 @@ exports.postStart = (context) ->
     ###
     REPL Commands
     ###
-    repl.commands['.cls'] =
+    cmd =
         help: 'Clear the screen'
         action: ->
             repl.outputStream.write '\u001B[2J\u001B[0;0f'
             repl.displayPrompt()
+    repl.defineCommand 'cls', cmd

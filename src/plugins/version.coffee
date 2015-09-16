@@ -18,9 +18,10 @@ exports.setup = (context) ->
 # This adds the `.versions` command to the interpreter
 exports.postStart = (context) ->
     {repl} = context
-    repl.commands['.versions'] =
+    cmd =
         help: 'Show Node version information'
         action: ->
             versions = ("#{key} #{value}" for key, value of process.versions).join '\n'
             repl.outputStream.write "#{versions}\n"
             repl.displayPrompt()
+    repl.defineCommand 'versions', cmd
