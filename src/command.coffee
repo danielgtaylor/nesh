@@ -143,19 +143,26 @@ opts.prompt = argv.prompt if argv.prompt?
 opts.welcome = argv.welcome if argv.welcome?
 
 if argv.eval
-    isJs = false
-    if fs.existsSync argv.eval
-        isJs = argv.eval[-3..] is '.js'
-        opts.evalData = fs.readFileSync argv.eval, 'utf-8'
-    else
-        opts.evalData = argv.eval
+    evalArgs = if argv.eval instanceof Array then argv.eval else [argv.eval]
+    
+    evalScripts = for evalArg in evalArgs 
+        isJs = false
+        evalScript = if fs.existsSync evalArg
+            isJs = evalArg[-3..] is '.js'
+            fs.readFileSync evalArg, 'utf-8'
+        else
+            evalArg
 
-    # If we are evaluating code, and it's either from a string or
-    # from a file not ending in `.js`, and a non-js language is
-    # set, then we need to compile it to js first.
-    if not isJs and nesh.compile
-        nesh.log.debug 'Compiling eval data'
-        opts.evalData = nesh.compile opts.evalData
+        # If we are evaluating code, and it's either from a string or
+        # from a file not ending in `.js`, and a non-js language is
+        # set, then we need to compile it to js first.
+        if not isJs and nesh.compile
+            nesh.log.debug 'Compiling eval data'
+            evalScript = nesh.compile evalScript
+
+        evalScript
+
+    opts.evalData = evalScripts.join ";\n"
 
 # Initialize and autoload plugins
 nesh.init true, (err) ->
