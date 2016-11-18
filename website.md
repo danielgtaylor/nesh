@@ -529,7 +529,7 @@ Then modify your `~/.nesh_config.json` file to enable the plugin. A minimal conf
 
 ```javascript
 {
-    plugins: ["nesh-myplugin"]
+    "plugins": ["nesh-myplugin"]
 }
 ```
 
