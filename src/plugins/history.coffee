@@ -58,10 +58,10 @@ exports.postStart = (context) ->
     repl.rli.addListener 'line', (code) ->
         if code and code.length and code isnt '.history' and lastLine isnt code
             # Save the latest command in the file
-            fs.write fd, "#{code}\n"
+            fs.write fd, "#{code}\n", ->
             lastLine = code
 
-    repl.rli.on 'exit', -> fs.close fd
+    repl.rli.on 'exit', -> fs.close fd, ->
 
     # Add a command to show the history stack
     repl.commands['.history'] =
