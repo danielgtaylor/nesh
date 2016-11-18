@@ -64,8 +64,9 @@ exports.postStart = (context) ->
     repl.rli.on 'exit', -> fs.close fd, ->
 
     # Add a command to show the history stack
-    repl.commands['.history'] =
+    cmd =
         help: 'Show command history'
         action: ->
             repl.outputStream.write "#{repl.rli.history[..].reverse().join '\n'}\n"
             repl.displayPrompt()
+    repl.defineCommand 'history', cmd
